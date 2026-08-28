@@ -1,0 +1,3739 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=1">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="KZC Shifts">
+<meta name="theme-color" content="#12233F">
+<title>KZC Shifts — KidZania Cairo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#12233F;
+    --ink-2:#1B3B63;
+    --paper:#FBF4E4;
+    --paper-2:#F3E9D2;
+    --sun:#FFC53D;
+    --coral:#FF6B57;
+    --mint:#2EC4B6;
+    --violet:#7C6CF0;
+    --sky:#3AA6FF;
+    --line: rgba(18,35,63,0.14);
+    --shadow: 0 10px 30px rgba(18,35,63,0.12);
+    --panel-bg:#fff;
+    --dot-op:.10;
+    --mut-04: rgba(18,35,63,0.04);
+    --mut-30: rgba(18,35,63,0.3);
+    --mut-35: rgba(18,35,63,0.35);
+    --mut-40: rgba(18,35,63,0.4);
+    --mut-45: rgba(18,35,63,0.45);
+    --mut-50: rgba(18,35,63,0.5);
+    --mut-55: rgba(18,35,63,0.55);
+    --mut-60: rgba(18,35,63,0.6);
+    --surface-dark:#12233F;
+    --surface-light:#FBF4E4;
+  }
+  html[data-theme="dark"]{
+    --ink:#F3ECDA;
+    --ink-2:#F3ECDA;
+    --paper:#0D1B30;
+    --paper-2:#1C3357;
+    --line: rgba(243,236,218,0.18);
+    --shadow: 0 10px 30px rgba(0,0,0,0.45);
+    --panel-bg:#16294A;
+    --dot-op:.14;
+    --mut-04: rgba(243,236,218,0.06);
+    --mut-30: rgba(243,236,218,0.45);
+    --mut-35: rgba(243,236,218,0.5);
+    --mut-40: rgba(243,236,218,0.55);
+    --mut-45: rgba(243,236,218,0.6);
+    --mut-50: rgba(243,236,218,0.65);
+    --mut-55: rgba(243,236,218,0.7);
+    --mut-60: rgba(243,236,218,0.72);
+  }
+  /* ===== BOOT / LOADING SCREEN ===== */
+  .boot-screen{
+    position:fixed; inset:0; z-index:200; background:var(--ink);
+    display:flex; flex-direction:column; align-items:center; justify-content:center; gap:10px;
+    color:var(--paper);
+  }
+  .boot-mark{font-size:52px; animation:bootBounce 1.1s ease-in-out infinite;}
+  @keyframes bootBounce{0%,100%{transform:translateY(0);}50%{transform:translateY(-10px);}}
+  .boot-title{font-family:'Baloo 2',sans-serif; font-weight:800; font-size:22px;}
+  .boot-sub{font-size:13px; font-weight:600; color:rgba(251,244,228,0.55); letter-spacing:.04em; text-transform:uppercase;}
+  .boot-spinner{display:flex; gap:6px; margin-top:14px;}
+  .boot-spinner span{width:8px; height:8px; border-radius:50%; background:var(--sun); animation:bootDot 1s ease-in-out infinite;}
+  .boot-spinner span:nth-child(2){animation-delay:.15s;}
+  .boot-spinner span:nth-child(3){animation-delay:.3s;}
+  @keyframes bootDot{0%,80%,100%{opacity:.25; transform:scale(.7);}40%{opacity:1; transform:scale(1);}}
+
+  /* ===== AUTH SCREEN ===== */
+  .auth-screen{
+    position:fixed; inset:0; z-index:190; background:var(--paper);
+    display:flex; align-items:center; justify-content:center; padding:24px;
+    overflow-y:auto;
+  }
+  .auth-screen::before{
+    content:"";position:fixed;inset:0;pointer-events:none;z-index:0;opacity:.5;
+    background-image:radial-gradient(circle at 1px 1px, rgba(18,35,63,var(--dot-op)) 1px, transparent 0);
+    background-size:22px 22px;
+  }
+  .auth-card{
+    position:relative; z-index:1; width:100%; max-width:380px;
+    background:var(--panel-bg); border:2px solid var(--ink); border-radius:22px;
+    padding:32px 26px; box-shadow:var(--shadow); text-align:center;
+  }
+  .auth-mark{font-size:40px; margin-bottom:6px;}
+  .auth-title{font-family:'Baloo 2',sans-serif; font-weight:800; font-size:22px; color:var(--ink);}
+  .auth-sub{font-size:12px; font-weight:700; color:var(--mut-50); letter-spacing:.05em; text-transform:uppercase; margin-bottom:22px;}
+  .auth-tabs{
+    display:flex; background:var(--mut-04); border:2px solid var(--line); border-radius:14px;
+    padding:4px; margin-bottom:20px; gap:4px;
+  }
+  .auth-tab{
+    flex:1; border:none; background:transparent; padding:9px 8px; border-radius:10px;
+    font-family:'Inter'; font-weight:700; font-size:13px; color:var(--mut-55); cursor:pointer;
+    transition:background .15s ease, color .15s ease;
+  }
+  .auth-tab.active{background:var(--sun); color:var(--ink);}
+  .auth-field{text-align:left; margin-bottom:14px;}
+  .auth-field label{
+    display:block; font-size:12px; font-weight:700; color:var(--mut-55);
+    margin-bottom:6px; text-transform:uppercase; letter-spacing:.03em;
+  }
+  .auth-input{
+    width:100%; padding:12px 14px; border-radius:12px; border:2px solid var(--line);
+    background:var(--paper); color:var(--ink); font-family:'Inter'; font-size:14px; font-weight:600;
+    outline:none; transition:border-color .15s ease;
+  }
+  .auth-input:focus{border-color:var(--sun);}
+  .auth-input-wrap{position:relative;}
+  .auth-input-wrap .auth-input{padding-right:44px;}
+  .auth-pw-toggle{
+    position:absolute; right:6px; top:50%; transform:translateY(-50%);
+    width:32px; height:32px; border:none; background:transparent; border-radius:8px;
+    display:flex; align-items:center; justify-content:center; cursor:pointer;
+    color:var(--mut-55); padding:0;
+  }
+  .auth-pw-toggle:hover{background:var(--mut-04); color:var(--ink);}
+  .auth-pw-toggle svg{width:18px; height:18px; display:block;}
+  .auth-pw-toggle .eye-off{display:none;}
+  .auth-pw-toggle.is-visible .eye-on{display:none;}
+  .auth-pw-toggle.is-visible .eye-off{display:block;}
+  .auth-error{
+    background:rgba(255,107,87,0.12); border:2px solid rgba(255,107,87,0.4); color:var(--coral);
+    font-size:12.5px; font-weight:700; padding:10px 12px; border-radius:10px; margin-bottom:14px; text-align:left;
+  }
+  .auth-submit{
+    width:100%; padding:13px; border:none; border-radius:14px; background:var(--sun); color:var(--ink);
+    font-family:'Baloo 2',sans-serif; font-weight:800; font-size:15px; cursor:pointer; margin-top:4px;
+    box-shadow:0 6px 0 rgba(18,35,63,0.2); transition:transform .1s ease;
+  }
+  .auth-submit:active{transform:translateY(3px); box-shadow:0 3px 0 rgba(18,35,63,0.2);}
+  .auth-submit:disabled{opacity:.6; cursor:default;}
+  .auth-switch{margin-top:16px; font-size:12.5px; color:var(--mut-55); font-weight:600;}
+  .auth-switch button{
+    background:none; border:none; color:var(--ink); font-weight:800; text-decoration:underline;
+    cursor:pointer; font-size:12.5px; font-family:'Inter'; padding:0;
+  }
+
+  *{box-sizing:border-box; -webkit-tap-highlight-color:transparent;}
+  html{-webkit-text-size-adjust:100%; overflow-x:hidden; width:100%;}
+  html, body{transition:background .2s ease, color .2s ease;}
+  body{margin:0;font-family:'Inter',sans-serif;background:var(--paper);color:var(--ink); overflow-x:hidden; width:100%; position:relative;}
+  body::before{
+    content:"";position:fixed;inset:0;pointer-events:none;z-index:0;opacity:.5;
+    background-image:radial-gradient(circle at 1px 1px, rgba(18,35,63,var(--dot-op)) 1px, transparent 0);
+    background-size:22px 22px;
+  }
+  h1,h2,h3,.display{font-family:'Baloo 2',sans-serif;}
+  .mono{font-family:'JetBrains Mono',monospace;}
+  a{color:inherit;}
+  .wrap{max-width:1180px;margin:0 auto;padding:28px 24px 80px;position:relative;z-index:1; width:100%;}
+
+  /* ===== APP SHELL: SIDEBAR + TABS ===== */
+  .sidebar{
+    position:fixed; left:0; top:0; bottom:0; width:220px; z-index:40;
+    background:var(--surface-dark); color:var(--surface-light);
+    display:flex; flex-direction:column; padding:26px 18px;
+    border-right:2px solid var(--surface-dark);
+  }
+  .sb-brand{display:flex; align-items:center; gap:10px; margin-bottom:34px;}
+  .sb-mark{font-size:26px;}
+  .sb-title{font-family:'Baloo 2'; font-weight:800; font-size:16px; line-height:1.1;}
+  .sb-nav{display:flex; flex-direction:column; gap:6px; flex:1;}
+  .sb-item{
+    display:flex; align-items:center; gap:12px; text-align:left;
+    background:transparent; border:none; color:rgba(251,244,228,0.6);
+    padding:12px 14px; border-radius:12px; font-family:'Inter'; font-weight:700; font-size:14px;
+    cursor:pointer; transition:background .15s ease, color .15s ease;
+  }
+  .sb-item .sb-ic{font-size:17px;}
+  .sb-item:hover{background:rgba(251,244,228,0.08); color:var(--paper);}
+  .sb-item.active{background:var(--sun); color:var(--surface-dark);}
+  .sb-foot{font-size:11px; color:rgba(251,244,228,0.35); font-weight:600;}
+  .theme-toggle{
+    display:flex; align-items:center; justify-content:space-between; gap:8px;
+    background:rgba(251,244,228,0.08); border:1px solid rgba(251,244,228,0.14);
+    border-radius:12px; padding:10px 12px; margin-bottom:14px; cursor:pointer;
+  }
+  .theme-toggle span.tt-lbl{font-size:12.5px; font-weight:700; color:rgba(251,244,228,0.75); display:flex; align-items:center; gap:6px;}
+  .tt-switch{width:34px; height:19px; border-radius:999px; background:rgba(251,244,228,0.2); position:relative; flex:0 0 auto; transition:background .15s ease;}
+  .tt-switch::after{content:""; position:absolute; top:2px; left:2px; width:15px; height:15px; border-radius:50%; background:var(--paper); transition:transform .15s ease;}
+  html[data-theme="dark"] .tt-switch{background:var(--sun);}
+  html[data-theme="dark"] .tt-switch::after{transform:translateX(15px); background:var(--ink);}
+
+  .wrap{margin-left:220px; max-width:960px; padding:28px 32px 80px; width:calc(100% - 220px);}
+
+  .tab-panel{display:none; max-width:100%; overflow-x:hidden;}
+  .tab-panel.active{display:block;}
+  .tab-head{margin-bottom:20px;}
+  .tab-head h1{font-size:26px; font-weight:800; margin:0 0 6px;}
+  .sub-dark{margin:0; font-size:13.5px; color:var(--mut-55);}
+
+  .fab-nav{display:none;}
+
+  @media (max-width:900px){
+    .sidebar{display:none;}
+    .wrap{margin-left:0; max-width:100%; width:100%;}
+    /* Lock page-level scrolling to a single inner container instead of the body.
+       This stops iOS Safari's rubber-band/toolbar-resize behavior (especially in
+       home-screen "standalone" app mode) from temporarily detaching position:fixed
+       elements — which is what made the bottom nav lift and leave a gap on scroll. */
+    html, body{height:100%; overflow:hidden; overscroll-behavior:none;}
+    #appRoot{height:100%; height:100dvh;}
+    .wrap{
+      height:100%; height:100dvh;
+      overflow-y:auto; -webkit-overflow-scrolling:touch; overscroll-behavior-y:none;
+    }
+    .fab-nav{
+      display:flex; position:fixed; right:0; top:0; z-index:55;
+      margin:calc(14px + env(safe-area-inset-top)) 14px 0 0;
+    }
+    /* Apple liquid glass pill */
+    .fab-panel{
+      position:relative; overflow:hidden; display:flex; flex-direction:column;
+      width:48px; height:48px; border-radius:999px;
+      background:rgba(255,255,255,0.18);
+      backdrop-filter:saturate(180%) blur(22px);
+      -webkit-backdrop-filter:saturate(180%) blur(22px);
+      border:1px solid rgba(255,255,255,0.35);
+      box-shadow:0 8px 32px rgba(0,0,0,0.18), inset 0 1px 0 rgba(255,255,255,0.45);
+      cursor:pointer;
+      transition:width .5s cubic-bezier(.22,1,.36,1), height .5s cubic-bezier(.22,1,.36,1),
+                 border-radius .5s cubic-bezier(.22,1,.36,1), background .3s ease;
+    }
+    html[data-theme="dark"] .fab-panel{
+      background:rgba(20,30,50,0.45);
+      border-color:rgba(255,255,255,0.15);
+      box-shadow:0 8px 32px rgba(0,0,0,0.45), inset 0 1px 0 rgba(255,255,255,0.12);
+    }
+    .fab-panel.open{
+      width:200px; height:auto; min-height:48px; border-radius:22px; cursor:default;
+      background:rgba(255,255,255,0.22);
+    }
+    html[data-theme="dark"] .fab-panel.open{
+      background:rgba(20,30,50,0.55);
+    }
+    .fab-items{
+      position:relative; z-index:1; flex:0; display:flex; flex-direction:column;
+      align-items:flex-start; justify-content:center; gap:2px;
+      opacity:0; pointer-events:none; overflow:hidden; padding:0 8px 10px;
+      transition:opacity .3s ease, flex .5s cubic-bezier(.22,1,.36,1);
+      max-height:0;
+    }
+    .fab-panel.open .fab-items{
+      flex:1; opacity:1; pointer-events:auto; max-height:400px;
+      transition:opacity .35s ease .25s, flex .5s cubic-bezier(.22,1,.36,1), max-height .5s cubic-bezier(.22,1,.36,1);
+    }
+    .fab-item{
+      background:none; border:none; color:var(--ink); display:flex; align-items:center; gap:9px;
+      font-family:'Inter'; font-weight:700; font-size:14px; cursor:pointer; padding:8px 10px;
+      border-radius:12px; width:100%; max-width:180px;
+      transition:background .12s ease;
+    }
+    .fab-item:hover{ background:rgba(18,35,63,0.07); }
+    html[data-theme="dark"] .fab-item{ color:rgba(255,255,255,0.85); }
+    html[data-theme="dark"] .fab-item:hover{ background:rgba(255,255,255,0.08); }
+    .fab-item svg{width:18px; height:18px; flex-shrink:0; opacity:.7;}
+    .fab-item.active{ color:var(--ink); }
+    .fab-item.active svg{ opacity:1; color:var(--violet); }
+    html[data-theme="dark"] .fab-item.active{ color:#fff; }
+    html[data-theme="dark"] .fab-item.active svg{ color:var(--sun); }
+    .fab-bar{
+      position:relative; z-index:1; display:flex; align-items:center; justify-content:flex-end;
+      height:48px; padding-right:15px; flex-shrink:0;
+    }
+    .fab-burger{position:relative; width:18px; height:14px; flex-shrink:0;}
+    .fab-burger span{
+      position:absolute; left:0; width:100%; height:2px; border-radius:2px;
+      background:var(--ink);
+      transition:transform .35s ease, top .35s ease, opacity .25s ease;
+    }
+    html[data-theme="dark"] .fab-burger span{ background:rgba(255,255,255,0.9); }
+    .fab-burger span:nth-child(1){top:0;}
+    .fab-burger span:nth-child(2){top:50%; margin-top:-1px;}
+    .fab-burger span:nth-child(3){top:100%; margin-top:-2px;}
+    .fab-panel.open .fab-burger span:nth-child(1){top:50%; transform:translateY(-50%) rotate(45deg);}
+    .fab-panel.open .fab-burger span:nth-child(2){opacity:0;}
+    .fab-panel.open .fab-burger span:nth-child(3){top:50%; margin-top:-1px; transform:translateY(-50%) rotate(-45deg);}
+  }
+
+  /* ===== HEADER / HERO PASSPORT ===== */
+  .hero{
+    background:var(--surface-dark);
+    color:var(--surface-light);
+    border-radius:28px;
+    padding:34px 34px 30px;
+    position:relative;
+    overflow:hidden;
+    box-shadow:var(--shadow);
+    border:2px solid var(--surface-dark);
+    margin-bottom:26px;
+  }
+  .hero::after{
+    content:"";position:absolute; right:-60px; top:-60px; width:260px; height:260px; border-radius:50%;
+    background:radial-gradient(circle, rgba(255,197,61,0.25), transparent 70%);
+  }
+  .hero-top{display:flex;justify-content:space-between;align-items:flex-start;gap:20px;flex-wrap:wrap;position:relative;z-index:1;}
+  .eyebrow{
+    display:inline-flex;align-items:center;gap:8px;
+    font-size:12px;letter-spacing:.14em;text-transform:uppercase;
+    color:var(--sun); font-weight:700; margin-bottom:6px;
+  }
+  .eyebrow .dot{width:6px;height:6px;border-radius:50%;background:var(--sun);}
+  .hero h1{font-size:clamp(28px,4vw,42px);margin:0 0 4px;line-height:1.05;font-weight:800;}
+  .hero p.sub{margin:0;color:rgba(251,244,228,0.7);font-size:15px;max-width:440px; overflow-wrap:break-word;}
+  .passport-badge{
+    background:var(--surface-light);color:var(--surface-dark);
+    border-radius:18px; padding:14px 20px; text-align:center; min-width:150px;
+    box-shadow:0 6px 0 rgba(0,0,0,0.15);
+    transform:rotate(2deg);
+    border:2px dashed var(--surface-dark);
+  }
+  .passport-badge .num{font-family:'Baloo 2';font-size:26px;font-weight:800;line-height:1;}
+  .passport-badge .num.is-est{font-size:19px; line-height:1.15; overflow-wrap:break-word; word-break:break-word;}
+  .passport-badge .lbl{font-size:11px;text-transform:uppercase;letter-spacing:.08em;font-weight:700;opacity:.65;margin-top:4px;}
+
+  .hero-stats{
+    display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:14px; margin-top:26px; position:relative; z-index:1;
+  }
+  .stat-card{
+    background:rgba(251,244,228,0.06);
+    border:1px solid rgba(251,244,228,0.14);
+    border-radius:16px; padding:16px 18px;
+    backdrop-filter:blur(4px);
+  }
+  .stat-card .k{font-size:11px;text-transform:uppercase;letter-spacing:.1em;color:rgba(251,244,228,0.55);font-weight:700;margin-bottom:6px;}
+  .stat-card .v{font-family:'Baloo 2';font-size:24px;font-weight:800;}
+  .stat-card.accent .v{color:var(--sun);}
+  .stat-card.accent2 .v{color:var(--mint);}
+  .stat-card.accent3 .v{color:var(--coral);}
+  .next-line{font-size:12px;color:rgba(251,244,228,0.55); margin-top:4px;}
+
+  @media (max-width:760px){ .hero-stats{grid-template-columns:repeat(2,minmax(0,1fr));} }
+
+  /* ===== LAYOUT GRID ===== */
+  .grid{display:grid; grid-template-columns: minmax(0,1.15fr) minmax(0,0.85fr); gap:22px; margin-top:26px; max-width:100%;}
+  @media (max-width:980px){ .grid{grid-template-columns:1fr;} }
+
+  .panel{
+    background:var(--panel-bg); border-radius:22px; padding:24px; border:2px solid var(--ink);
+    box-shadow:var(--shadow);
+  }
+  .panel + .panel{margin-top:22px;}
+  .panel h2{margin:0 0 4px; font-size:20px; font-weight:800;}
+  .panel .desc{font-size:13px; color:var(--mut-55); margin:0 0 18px; overflow-wrap:break-word;}
+
+  /* ===== CALENDAR ===== */
+  .cal-head{display:flex; align-items:center; justify-content:space-between; margin-bottom:14px;}
+  .cal-head .month{font-family:'Baloo 2'; font-size:20px; font-weight:800;}
+  .cal-nav{display:flex; gap:6px;}
+  .icon-btn{
+    width:34px;height:34px;border-radius:10px;border:2px solid var(--ink); background:var(--paper); color:var(--ink);
+    cursor:pointer; font-size:16px; font-weight:800; display:flex;align-items:center;justify-content:center;
+    transition:transform .12s ease;
+  }
+  .icon-btn:hover{transform:translateY(-2px); background:var(--sun); color:var(--surface-dark);}
+  .dow{display:grid; grid-template-columns:repeat(7,minmax(0,1fr)); font-size:11px; text-transform:uppercase; letter-spacing:.06em; font-weight:700; color:var(--mut-40); margin-bottom:6px;}
+  .dow div{text-align:center; padding:4px 0;}
+  .cal-grid{display:grid; grid-template-columns:repeat(7,minmax(0,1fr)); gap:6px;}
+  .day{
+    aspect-ratio:1/0.92; border-radius:12px; border:2px solid transparent; background:var(--paper-2);
+    padding:6px 6px; position:relative; cursor:default; font-size:12px; font-weight:700; color:var(--mut-35);
+    display:flex; flex-direction:column; justify-content:space-between;
+  }
+  .day.pad{background:transparent;}
+  .day.today{border-color:var(--ink);}
+  .day.off-day{cursor:pointer;}
+  .day.off-day:hover{outline:2px dashed var(--mut-30);}
+  .day.has-shift{background:var(--mint); color:var(--surface-light); cursor:pointer;}
+  .day.has-shift:hover{outline:3px solid var(--sun);}
+  .day.has-shift.period-am{background:var(--mint);}
+  .day.has-shift.period-pm{background:var(--violet); color:var(--surface-light);}
+  .day.has-shift.period-mid{background:var(--sky); color:var(--surface-light);}
+  .day.has-shift.period-both{background:var(--coral); color:var(--surface-light);}
+  .day .dnum{opacity:.9;}
+  .day .est-tag{
+    flex:1; display:flex; align-items:center; justify-content:center; text-align:center;
+    font-size:12px; font-weight:800; opacity:.95; line-height:1.15; padding:2px 0;
+    overflow:hidden; overflow-wrap:break-word; word-break:break-word;
+  }
+  .day .stamp{
+    align-self:flex-end; font-size:9px; background:var(--sun); color:var(--ink);
+    border-radius:6px; padding:2px 5px; font-weight:800; line-height:1.3;
+    box-shadow:0 1px 2px rgba(0,0,0,.2);
+  }
+  .day.off-day .dnum{color:var(--mut-35);}
+  .legend{display:flex; gap:16px; margin-top:14px; font-size:12px; color:var(--mut-55); flex-wrap:wrap;}
+  .legend span{display:inline-flex; align-items:center; gap:6px;}
+  .legend .sw{width:12px;height:12px;border-radius:4px;}
+
+  /* ===== VIEW TOGGLE ===== */
+  .cal-view-toggle{display:flex; gap:6px; margin-bottom:12px; background:var(--paper-2); border-radius:12px; padding:4px; border:2px solid var(--ink);}
+  .view-tab{
+    flex:1; border:none; background:transparent; padding:8px 0; border-radius:9px; font-weight:800; font-size:12px;
+    cursor:pointer; color:var(--mut-50); text-transform:uppercase; letter-spacing:.04em; transition:all .12s ease;
+  }
+  .view-tab.active{background:var(--ink); color:var(--paper);}
+
+  /* ===== WEEK LIST VIEW ===== */
+  .week-grid{display:flex; flex-direction:column; gap:8px;}
+  .week-row{
+    display:flex; align-items:center; gap:10px; border-radius:14px; border:2px solid transparent;
+    background:var(--paper-2); padding:10px 12px; cursor:default;
+  }
+  .week-row.today{border-color:var(--ink);}
+  .week-row.off-day{cursor:pointer;}
+  .week-row.off-day:hover{outline:2px dashed var(--mut-30);}
+  .week-row.has-shift{cursor:pointer;}
+  .week-row.has-shift:hover{outline:3px solid var(--sun);}
+  .week-row.period-am{background:var(--mint);}
+  .week-row.period-pm{background:var(--violet); color:var(--surface-light);}
+  .week-row.period-mid{background:var(--sky); color:var(--surface-light);}
+  .week-row.period-both{background:var(--coral); color:var(--surface-light);}
+  .week-row .wr-date{
+    flex:0 0 52px; display:flex; flex-direction:column; align-items:center; justify-content:center; line-height:1.1;
+  }
+  .week-row .wr-date .wr-dow{font-size:10px; font-weight:800; text-transform:uppercase; opacity:.6; letter-spacing:.05em;}
+  .week-row .wr-date .wr-dnum{font-size:18px; font-weight:800; font-family:'Baloo 2';}
+  .week-row .wr-body{flex:1; min-width:0;}
+  .week-row .wr-est{font-size:14px; font-weight:800; line-height:1.25; overflow-wrap:break-word; word-break:break-word;}
+  .week-row.off-day .wr-est{color:var(--mut-35); font-weight:600;}
+  .week-row .wr-stamp{
+    flex:0 0 auto; font-size:10px; background:var(--sun); color:var(--ink);
+    border-radius:6px; padding:3px 7px; font-weight:800;
+  }
+  @media (max-width:520px){
+    .week-row .wr-est{font-size:13px;}
+    .week-row .wr-date{flex-basis:44px;}
+  }
+
+  /* ===== FORM ===== */
+  label{display:block; font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.06em; color:var(--mut-55); margin-bottom:5px;}
+  .field{margin-bottom:14px;}
+  input, select{
+    width:100%; padding:10px 12px; border-radius:10px; border:2px solid var(--line); background:var(--paper);
+    font-family:'Inter',sans-serif; font-size:14px; color:var(--ink); font-weight:600;
+  }
+  input:focus, select:focus{outline:none; border-color:var(--ink);}
+  .row2{display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); gap:12px;}
+  .btn{
+    display:inline-flex; align-items:center; justify-content:center; gap:8px;
+    border-radius:12px; border:2px solid var(--ink); padding:11px 18px; font-weight:800; font-size:14px;
+    cursor:pointer; font-family:'Inter',sans-serif; transition:transform .12s ease, box-shadow .12s ease;
+  }
+  .btn-primary{background:var(--ink); color:var(--paper);}
+  .btn-primary:hover{transform:translateY(-2px); box-shadow:0 5px 0 var(--ink); }
+  .btn-ghost{background:transparent; color:var(--ink);}
+  .btn-ghost:hover{background:var(--paper-2);}
+  .btn-block{width:100%;}
+
+  /* ===== IMPORT ===== */
+  textarea{
+    width:100%; min-height:110px; border-radius:12px; border:2px solid var(--line); background:var(--paper);
+    padding:12px; font-family:'JetBrains Mono',monospace; font-size:12.5px; resize:vertical; color:var(--ink);
+  }
+  textarea:focus{outline:none; border-color:var(--ink);}
+  .hint{font-size:12px; color:var(--mut-50); margin-top:8px; line-height:1.5; overflow-wrap:break-word;}
+  .import-preview{margin-top:14px; max-height:220px; overflow:auto; border-radius:12px; border:1px solid var(--line);}
+  .import-row{display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr) minmax(0,1fr) auto; gap:8px; padding:8px 10px; font-size:12.5px; border-bottom:1px solid var(--line); align-items:center; overflow-wrap:break-word;}
+  .import-row.bad{background:rgba(255,107,87,0.08); color:var(--coral);}
+  .import-row.off{background:var(--mut-04); color:var(--mut-45); font-style:italic;}
+  .import-row.head{font-weight:800; text-transform:uppercase; font-size:10px; letter-spacing:.05em; color:var(--mut-45); background:var(--paper-2);}
+
+  /* ===== SHIFT LOG ===== */
+  .log-item{
+    display:grid; grid-template-columns:52px minmax(0,1fr) auto auto; align-items:center; gap:14px;
+    padding:12px 8px; border-bottom:1px dashed var(--line);
+  }
+  .log-item:last-child{border-bottom:none;}
+  .log-date{
+    background:var(--ink); color:var(--paper); border-radius:10px; text-align:center; padding:6px 0; font-family:'Baloo 2'; font-weight:800;
+  }
+  .log-date .d{font-size:17px; line-height:1;}
+  .log-date .m{font-size:9px; text-transform:uppercase; opacity:.7;}
+  .log-mid .est{font-weight:800; font-size:14px; overflow-wrap:break-word; word-break:break-word;}
+  .log-mid .time{font-size:12px; color:var(--mut-50); margin-top:2px;}
+  .log-pay{font-family:'Baloo 2'; font-weight:800; font-size:16px; color:var(--mint); text-align:right;}
+  .log-pay small{display:block; font-family:'Inter'; font-weight:600; font-size:10px; color:var(--mut-40);}
+  .del-btn{background:none;border:none;cursor:pointer;font-size:16px;color:var(--mut-35); padding:4px;}
+  .del-btn:hover{color:var(--coral);}
+  .log-item.pending{opacity:.72;}
+  .log-item.pending .log-pay{color:var(--mut-40);}
+  .shift-note{font-size:11.5px; color:var(--violet); font-weight:600; margin-top:3px; overflow-wrap:break-word; word-break:break-word;}
+  .pending-tag{display:inline-block; font-size:9.5px; font-weight:800; text-transform:uppercase; letter-spacing:.05em; color:var(--violet); background:rgba(124,108,240,0.12); border-radius:6px; padding:2px 6px; margin-left:6px; vertical-align:middle;}
+  .est-edit-btn{background:none;border:none;cursor:pointer;font-size:12px;color:var(--mut-35); padding:2px 4px; vertical-align:middle;}
+  .est-edit-btn:hover{color:var(--violet);}
+  .est-missing{color:var(--coral); font-style:italic;}
+  .empty{text-align:center; padding:34px 10px; color:var(--mut-45); font-size:13.5px; overflow-wrap:break-word;}
+  .empty .em{font-size:30px; display:block; margin-bottom:8px;}
+
+  .filter-bar{display:flex; gap:8px; margin-bottom:12px; flex-wrap:wrap;}
+  .chip{
+    border:2px solid var(--line); background:var(--paper); border-radius:999px; padding:6px 14px; font-size:12px; font-weight:700;
+    cursor:pointer;
+  }
+  .chip.active{background:var(--ink); color:var(--paper); border-color:var(--ink);}
+
+  /* ===== SELECTABLE / MANAGEABLE CHIPS (establishments, templates) ===== */
+  .chip-row{display:flex; flex-wrap:wrap; gap:8px; margin-bottom:4px;}
+  .pick-chip{
+    border:2px solid var(--line); background:var(--paper); border-radius:999px; padding:8px 14px 8px 16px;
+    font-size:13px; font-weight:700; cursor:pointer; display:inline-flex; align-items:center; gap:6px;
+    transition:transform .1s ease;
+  }
+  .pick-chip:active{transform:scale(0.97);}
+  .pick-chip.selected{background:var(--mint); border-color:var(--mint); color:var(--ink);}
+  .pick-chip .rate-tag{font-size:10.5px; opacity:.6; font-weight:600;}
+  .manage-chip{
+    border:2px solid var(--line); background:var(--paper-2); border-radius:999px; padding:6px 8px 6px 14px;
+    font-size:12.5px; font-weight:700; display:inline-flex; align-items:center; gap:8px;
+  }
+  .manage-chip .mc-del{
+    background:var(--paper); border:none; width:20px; height:20px; border-radius:50%; cursor:pointer;
+    font-size:11px; color:var(--mut-50); display:flex; align-items:center; justify-content:center;
+  }
+  .manage-chip .mc-del:hover{background:var(--coral); color:#fff;}
+  .empty-chip-hint{font-size:12px; color:var(--mut-40); font-style:italic;}
+
+  footer{text-align:center; margin-top:36px; font-size:12px; color:var(--mut-40); line-height:1.7; padding-bottom:8px;}
+  footer .credit{font-weight:700; color:var(--mut-50);}
+
+  ::-webkit-scrollbar{width:8px;height:8px;}
+  ::-webkit-scrollbar-thumb{background:var(--line); border-radius:8px;}
+
+  .toast{
+    position:fixed; bottom:24px; left:50%; transform:translateX(-50%) translateY(20px); opacity:0;
+    background:var(--ink); color:var(--paper); padding:12px 22px; border-radius:12px; font-weight:700; font-size:13.5px;
+    box-shadow:var(--shadow); transition:all .25s ease; z-index:50; pointer-events:none;
+    max-width:90vw; width:max-content; text-align:center; overflow-wrap:break-word;
+  }
+  .toast.show{opacity:1; transform:translateX(-50%) translateY(0);}
+
+  /* ===== UNDO SNACKBAR ===== */
+  .snackbar{
+    position:fixed; bottom:24px; left:50%; transform:translateX(-50%) translateY(20px); opacity:0;
+    background:var(--ink); color:var(--paper); padding:10px 10px 10px 20px; border-radius:12px; font-weight:700; font-size:13.5px;
+    box-shadow:var(--shadow); transition:all .25s ease; z-index:70; pointer-events:none;
+    max-width:90vw; width:max-content; display:flex; align-items:center; gap:14px;
+  }
+  .snackbar.show{opacity:1; transform:translateX(-50%) translateY(0); pointer-events:auto;}
+  .snackbar .sb-undo-btn{
+    background:var(--sun); color:var(--ink); border:none; border-radius:9px; padding:7px 14px;
+    font-weight:800; font-size:12.5px; cursor:pointer; white-space:nowrap; font-family:'Inter',sans-serif;
+  }
+  .snackbar .sb-undo-btn:hover{transform:translateY(-1px);}
+
+  /* ===== DAY DETAIL SHEET (mobile-friendly, replaces alert()) ===== */
+  .sheet-backdrop{
+    position:fixed; inset:0; background:var(--mut-45); z-index:60;
+    opacity:0; pointer-events:none; transition:opacity .2s ease;
+  }
+  .sheet-backdrop.show{opacity:1; pointer-events:auto;}
+  .sheet{
+    position:fixed; left:0; right:0; bottom:0; z-index:61;
+    background:var(--paper); border-radius:22px 22px 0 0; border:2px solid var(--ink); border-bottom:none;
+    padding:18px 20px calc(20px + env(safe-area-inset-bottom));
+    transform:translateY(100%); transition:transform .25s ease;
+    max-height:70vh; overflow-y:auto; overflow-x:hidden; width:100%; max-width:100%;
+    overscroll-behavior:contain;
+  }
+  .sheet.show{transform:translateY(0);}
+  .sheet .handle{width:40px; height:4px; background:var(--line); border-radius:4px; margin:0 auto 14px;}
+  .sheet h3{margin:0 0 12px; font-size:18px; font-weight:800;}
+  .sheet-item{
+    display:flex; justify-content:space-between; align-items:center; gap:10px;
+    padding:10px 0; border-bottom:1px dashed var(--line);
+  }
+  .sheet-item:last-of-type{border-bottom:none;}
+  .sheet-item .si-l .est{font-weight:800; font-size:14px; overflow-wrap:break-word; word-break:break-word;}
+  .sheet-item .si-l .time{font-size:12px; color:var(--mut-50); margin-top:2px;}
+  .sheet-item .si-r{font-family:'Baloo 2'; font-weight:800; color:var(--mint); text-align:right; white-space:nowrap;}
+  .sheet-close{
+    margin-top:14px; width:100%; border:2px solid var(--ink); background:var(--ink); color:var(--paper);
+    border-radius:12px; padding:12px; font-weight:800; font-size:14px; cursor:pointer;
+  }
+
+  /* ===== MOBILE OPTIMIZATION ===== */
+  @media (max-width:600px){
+    .wrap{padding:16px 14px 28px;}
+    .hero{padding:22px 18px 20px; border-radius:22px; margin-bottom:20px;}
+    .hero-top{flex-direction:column; align-items:flex-start; gap:14px;}
+    .hero h1{font-size:26px;}
+    .hero p.sub{font-size:13.5px; max-width:100%;}
+    .passport-badge{align-self:stretch; width:100%; transform:none; min-width:0; padding:12px 18px;}
+    .passport-badge .num.is-est{font-size:17px;}
+    .hero-stats{grid-template-columns:repeat(2,1fr); gap:10px; margin-top:20px;}
+    .stat-card{padding:12px 14px;}
+    .stat-card .v{font-size:19px;}
+
+    .panel{padding:18px 16px; border-radius:18px;}
+    .panel h2{font-size:17px;}
+
+    .cal-head .month{font-size:17px;}
+    .dow{font-size:10px;}
+    .cal-grid{gap:4px;}
+    .day{border-radius:9px; padding:4px 3px; font-size:10px; aspect-ratio:1/1.05;}
+    .day .est-tag{font-size:10.5px; font-weight:800; line-height:1.1; padding:1px 0; -webkit-line-clamp:3; display:-webkit-box; -webkit-box-orient:vertical;}
+    .day .stamp{display:none;}
+    .legend{font-size:11px; gap:10px;}
+
+    .row2{grid-template-columns:1fr 1fr; gap:8px;}
+    input, select{padding:12px 12px; font-size:16px;} /* 16px prevents iOS auto-zoom */
+    input[type="date"], input[type="month"]{
+      width:100%; max-width:100%; min-width:0; display:block;
+      -webkit-appearance:none; appearance:none; padding:12px 8px; font-size:14px;
+    }
+    .field{min-width:0;}
+    textarea{font-size:14px;}
+    label{font-size:10.5px;}
+    .btn{padding:13px 16px; font-size:15px;}
+
+    .log-item{grid-template-columns:44px minmax(0,1fr); gap:10px; padding:11px 30px 11px 4px; position:relative;}
+    .log-date .d{font-size:15px;}
+    .log-date .m{font-size:8px;}
+    .log-mid .est{font-size:13px;}
+    .log-mid .time{font-size:11.5px;}
+    .log-pay{font-size:14px; grid-column:2/3; justify-self:end; margin-top:2px;}
+    .log-pay small{font-size:9.5px;}
+    .del-btn{position:absolute; top:10px; right:2px; margin-left:0;}
+
+    .import-row{grid-template-columns:1fr; gap:2px; font-size:12px;}
+    .import-row.head{display:none;}
+
+    .icon-btn{width:38px; height:38px;}
+    .chip{padding:8px 14px; font-size:12.5px;}
+  }
+  @media (max-width:380px){
+    .hero-stats{grid-template-columns:1fr 1fr;}
+    .hero h1{font-size:23px;}
+  }
+
+  /* ===== ADMIN DASHBOARD STYLES ===== */
+  .admin-root{
+    display:flex; min-height:100vh; background:var(--paper);
+  }
+  .admin-wrap{
+    margin-left:220px; max-width:960px; padding:28px 32px 80px; width:calc(100% - 220px);
+    position:relative; z-index:1;
+  }
+  @media (max-width:900px){
+    .admin-wrap{ margin-left:0; width:100%; padding:16px 14px 28px; }
+  }
+
+  /* Skeleton loading shimmer */
+  .coord-skeleton{
+    background:linear-gradient(90deg, var(--paper-2) 25%, var(--line) 50%, var(--paper-2) 75%);
+    background-size:400% 100%;
+    animation:coordShimmer 1.4s infinite;
+    border-radius:12px;
+  }
+  @keyframes coordShimmer{
+    0%{background-position:100% 50%;}
+    100%{background-position:0% 50%;}
+  }
+
+
+  .coord-req-card .crq-name{ font-size:14px; font-weight:800; color:var(--ink); }
+  .coord-req-card .crq-date{ font-size:13px; font-weight:700; color:var(--mut-55); }
+  .coord-req-card .crq-note{ font-size:12.5px; color:var(--mut-50); margin:4px 0 10px; }
+  .coord-req-card .crq-status{
+    display:inline-flex; align-items:center; padding:3px 10px; border-radius:999px;
+    font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:.04em;
+  }
+  .crq-status.pending{ background:rgba(255,197,61,0.2); color:#996600; }
+  html[data-theme="dark"] .crq-status.pending{ color:var(--sun); }
+  .crq-status.approved{ background:rgba(46,196,182,0.2); color:var(--mint); }
+  .crq-status.rejected{ background:rgba(255,107,87,0.15); color:var(--coral); }
+
+  /* Staff list items */
+  .coord-staff-item{
+    display:flex; align-items:center; justify-content:space-between; gap:10px;
+    padding:12px 14px; border:1.5px solid var(--line); border-radius:14px;
+    background:var(--panel-bg); margin-bottom:8px;
+  }
+  .csi-info .csi-name{ font-size:14px; font-weight:800; color:var(--ink); }
+  .csi-info .csi-email{ font-size:12px; color:var(--mut-50); font-weight:600; }
+  .csi-uid-row{ display:flex; align-items:center; gap:6px; margin-top:4px; }
+  .csi-uid-label{ font-size:10px; font-weight:800; text-transform:uppercase; letter-spacing:.03em; color:var(--mut-50); white-space:nowrap; }
+  .csi-uid-input{
+    flex:1; min-width:0; font-family:ui-monospace,'SFMono-Regular',Menlo,Consolas,monospace;
+    font-size:11px; font-weight:600; color:var(--mut-55); background:none; border:1px solid transparent;
+    border-radius:6px; padding:2px 5px; outline:none; transition:background .12s ease,border-color .12s ease;
+  }
+  .csi-uid-input:hover{ background:var(--paper-2); }
+  .csi-uid-input:focus{ background:var(--paper-2); border-color:var(--line); color:var(--ink); }
+  .csi-remove{
+    background:none; border:2px solid var(--coral); color:var(--coral);
+    border-radius:10px; padding:5px 10px; font-size:12px; font-weight:800; cursor:pointer;
+    transition:background .12s ease; white-space:nowrap;
+  }
+  .csi-remove:hover{ background:rgba(255,107,87,0.1); }
+
+
+
+  /* Staff-side assigned shift markers */
+  .assigned-marker{
+    background:rgba(255,197,61,0.25); border:2px solid var(--sun);
+    border-radius:6px; padding:2px 4px; font-size:10px; font-weight:800;
+    color:var(--ink); margin-top:2px; cursor:pointer;
+  }
+  .assigned-marker::before{ content:"✦ "; }
+
+  /* Day-off request marker on calendar */
+  .dayoff-marker{
+    background:rgba(124,108,240,0.15); border:2px solid var(--violet);
+    border-radius:6px; padding:2px 4px; font-size:10px; font-weight:800;
+    color:var(--violet); margin-top:2px;
+  }
+
+  /* Coordinator-assigned shift cells — styled just like self-logged shifts,
+     plus a small pin badge marking them as coordinator-made & uneditable. */
+  .day .coord-pin{
+    position:absolute; top:4px; right:4px; width:16px; height:16px; border-radius:50%;
+    background:var(--sun); color:var(--ink); display:flex; align-items:center; justify-content:center;
+    font-size:9px; font-weight:900; box-shadow:0 1px 3px rgba(0,0,0,.3); line-height:1;
+  }
+  .day.off-day.is-coord-assigned{ background:var(--paper-2); border:2px dashed var(--mut-35); cursor:pointer; }
+  .day.off-day.is-coord-assigned .dnum{ color:var(--mut-40); }
+  .day.off-day.is-coord-assigned:hover{ outline:2px dashed var(--violet); }
+  .week-row .wr-coord-badge{
+    flex:0 0 auto; font-size:9px; background:var(--sun); color:var(--ink);
+    border-radius:6px; padding:3px 6px; font-weight:800; text-transform:uppercase; letter-spacing:.03em;
+    display:flex; align-items:center; gap:3px;
+  }
+
+  /* Request day off button (profile tab) */
+  .dayoff-request-btn{
+    width:100%; padding:13px; border:2px solid var(--violet); border-radius:14px;
+    background:rgba(124,108,240,0.1); color:var(--violet);
+    font-family:'Inter'; font-weight:800; font-size:14px; cursor:pointer; margin-top:8px;
+    transition:background .12s ease;
+  }
+  .dayoff-request-btn:hover{ background:rgba(124,108,240,0.18); }
+
+  /* My requests list (staff side) */
+  .my-req-item{
+    display:flex; align-items:center; justify-content:space-between; gap:10px;
+    padding:10px 12px; border:1.5px solid var(--line); border-radius:12px;
+    background:var(--panel-bg); margin-bottom:8px;
+  }
+  .mri-date{ font-size:13px; font-weight:800; color:var(--ink); }
+  .mri-note{ font-size:12px; color:var(--mut-50); }
+
+
+</style>
+</head>
+<body>
+<script>(function(){try{var t=localStorage.getItem("kidzania_shift_theme_v1");if(t==="dark")document.documentElement.setAttribute("data-theme","dark");}catch(e){}})();</script>
+
+<!-- ===== ICON SPRITE ===== -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="ic-badge" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M8 4h8a2 2 0 0 1 2 2v13a1 1 0 0 1-1.45.9L12 17.5 7.45 19.9A1 1 0 0 1 6 19V6a2 2 0 0 1 2-2Z"/><circle cx="12" cy="9.5" r="2.25" fill="none" stroke="currentColor" stroke-width="1.8"/></symbol>
+    <symbol id="ic-calendar" viewBox="0 0 24 24"><rect x="3.5" y="5" width="17" height="16" rx="2.5" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M3.5 9.5h17M8 3v4M16 3v4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></symbol>
+    <symbol id="ic-pencil" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M4 20h4L18.5 9.5a2.1 2.1 0 0 0-3-3L5 17v3ZM14.5 8l1.5-1.5"/></symbol>
+    <symbol id="ic-gear" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3.1" fill="none" stroke="currentColor" stroke-width="1.8"/><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" d="M12 3.5v2.3M12 18.2v2.3M20.5 12h-2.3M5.8 12H3.5M17.7 6.3l-1.6 1.6M7.9 16.1l-1.6 1.6M17.7 17.7l-1.6-1.6M7.9 7.9 6.3 6.3"/></symbol>
+    <symbol id="ic-moon" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M20 14.3A8.5 8.5 0 1 1 9.7 4a6.7 6.7 0 0 0 10.3 10.3Z"/></symbol>
+    <symbol id="ic-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4.2" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M12 2.5v2.4M12 19.1v2.4M21.5 12h-2.4M4.9 12H2.5M18.4 5.6l-1.7 1.7M7.3 16.7l-1.7 1.7M18.4 18.4l-1.7-1.7M7.3 7.3 5.6 5.6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></symbol>
+    <symbol id="ic-tag" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" d="M11.4 3.6 20 4l.4 8.6-9.3 9.3a1.4 1.4 0 0 1-2 0l-6.6-6.6a1.4 1.4 0 0 1 0-2Z"/><circle cx="15" cy="9" r="1.6" fill="currentColor" stroke="none"/></symbol>
+    <symbol id="ic-note" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M6 3.5h9l4.5 4.5V20a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V4.5a1 1 0 0 1 1-1Z"/><path d="M14.5 3.5V8H19M8 12.5h8M8 16h5.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></symbol>
+    <symbol id="ic-x" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M5 5l14 14M19 5 5 19"/></symbol>
+    <symbol id="ic-trash" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M4.5 7h15M9.5 7V4.8a1 1 0 0 1 1-1h3a1 1 0 0 1 1 1V7M18 7l-.8 12.2a2 2 0 0 1-2 1.8H8.8a2 2 0 0 1-2-1.8L6 7"/><path d="M10 11v6M14 11v6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></symbol>
+    <symbol id="ic-check" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.5l5 5 10-11"/></symbol>
+    <symbol id="ic-warning" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" d="M12 3.5 22 20.5H2Z"/><path d="M12 9.5v5.3" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><circle cx="12" cy="17.6" r="1" fill="currentColor" stroke="none"/></symbol>
+    <symbol id="ic-moon-off" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M17 14.3a6.7 6.7 0 0 1-8.3-8.3M6.5 6.5A8.5 8.5 0 0 0 15.4 20a8.4 8.4 0 0 0 4.1-1.6"/><path d="M3 3l18 18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></symbol>
+    <symbol id="ic-arrow-down" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M12 4v14M6 13l6 6 6-6"/></symbol>
+    <symbol id="ic-user" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></symbol>
+    <symbol id="ic-chart" viewBox="0 0 24 24"><path d="M4 20V10M11 20V4M18 20v-7" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M3 20.5h18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></symbol>
+    <symbol id="ic-users" viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.3" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M2.8 20c0-3.6 2.8-6.2 6.2-6.2s6.2 2.6 6.2 6.2" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M15.5 5a3.1 3.1 0 0 1 0 6.1M18.2 20c0-2.9-1.9-5.2-4.5-6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="ic-inbox" viewBox="0 0 24 24"><path d="M3.5 12.5h4.8l1.4 2.4h4.6l1.4-2.4h4.8" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M5.3 6.5 3.5 12.5v6a1.3 1.3 0 0 0 1.3 1.3h14.4a1.3 1.3 0 0 0 1.3-1.3v-6l-1.8-6a1.3 1.3 0 0 0-1.25-1H6.55a1.3 1.3 0 0 0-1.25 1Z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></symbol>
+    <symbol id="ic-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M12 7.5V12l3.2 2" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="ic-ban" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M6.4 6.4l11.2 11.2" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></symbol>
+    <symbol id="ic-sunrise" viewBox="0 0 24 24"><path d="M12 3.5v4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M5.5 12.5a6.5 6.5 0 0 1 13 0" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M3.2 12.5h1.8M19 12.5h1.8M6.3 6.8l1.3 1.3M17.7 6.8l-1.3 1.3" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M2.5 16.5h19M4.5 20h15" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></symbol>
+    <symbol id="ic-sunset" viewBox="0 0 24 24"><path d="M12 8.5v-4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M5.5 12.5a6.5 6.5 0 0 1 13 0" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M3.2 12.5h1.8M19 12.5h1.8M6.3 7.8l1.3-1.3M17.7 7.8l-1.3-1.3" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M2.5 16.5h19M4.5 20h15" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></symbol>
+  </defs>
+</svg>
+<style>.icon{width:1em;height:1em;display:inline-block;vertical-align:-0.14em;fill:none;stroke:currentColor;}.icon-inline{width:14px;height:14px;vertical-align:-2px;margin-right:3px;}</style>
+
+<!-- ===== LOADING SCREEN ===== -->
+<div id="loadingScreen" class="boot-screen">
+  <div class="boot-mark"><svg class="icon"><use href="#ic-badge"/></svg></div>
+  <div class="boot-title">KZC Shifts</div>
+  <div class="boot-sub">KidZania Cairo</div>
+  <div class="boot-spinner"><span></span><span></span><span></span></div>
+</div>
+
+<!-- ===== AUTH SCREEN (sign up / log in) ===== -->
+<div id="authScreen" class="auth-screen" style="display:none;">
+  <div class="auth-card">
+    <div class="auth-mark"><svg class="icon"><use href="#ic-badge"/></svg></div>
+    <div class="auth-title">KZC Shifts</div>
+    <div class="auth-sub">KidZania Cairo</div>
+
+    <div class="auth-tabs">
+      <button class="auth-tab active" id="authTabLogin" type="button">Log in</button>
+      <button class="auth-tab" id="authTabSignup" type="button">Sign up</button>
+    </div>
+
+    <div class="auth-field">
+      <label>Email</label>
+      <input type="email" id="authEmail" class="auth-input" placeholder="you@example.com" autocomplete="email">
+    </div>
+    <div class="auth-field">
+      <label>Password</label>
+      <div class="auth-input-wrap">
+        <input type="password" id="authPassword" class="auth-input" placeholder="••••••••" autocomplete="current-password">
+        <button type="button" id="authPwToggle" class="auth-pw-toggle" aria-label="Show password" aria-pressed="false">
+          <svg class="eye-on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7Z"/><circle cx="12" cy="12" r="3"/></svg>
+          <svg class="eye-off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.94 10.94 0 0 1 12 20c-7 0-11-8-11-8a20.6 20.6 0 0 1 5.06-6.06M9.9 4.24A10.4 10.4 0 0 1 12 4c7 0 11 8 11 8a20.6 20.6 0 0 1-3.22 4.44M14.12 14.12a3 3 0 1 1-4.24-4.24"/><path d="M1 1l22 22"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <div id="authError" class="auth-error" style="display:none;"></div>
+
+    <button id="authSubmitBtn" class="auth-submit">Log in</button>
+    <div class="auth-switch">
+      <span id="authSwitchText">Don't have an account? <button type="button" id="authSwitchBtn">Sign up</button></span>
+    </div>
+    <div style="margin-top:22px; font-size:11px; color:var(--mut-45);">
+      Made by Karim · © <span id="authFootYear">2026</span> KZC Shifts
+    </div>
+  </div>
+</div>
+
+<!-- ===== CONFIRM MODAL (used for every delete/remove) ===== -->
+<!-- Lives outside #appRoot/#adminRoot so it isn't hidden when either
+     role's root container gets display:none toggled. -->
+<div class="sheet-backdrop" id="confirmBackdrop"></div>
+<div class="sheet" id="confirmSheet">
+  <div class="handle"></div>
+  <h3 id="confirmTitle">Are you sure?</h3>
+  <p id="confirmMsg" style="font-size:13.5px;color:var(--mut-60);margin:0 0 18px;line-height:1.5;"></p>
+  <div style="display:flex;gap:10px;">
+    <button class="btn btn-ghost" style="flex:1;" id="confirmCancelBtn">Cancel</button>
+    <button class="btn btn-primary" style="flex:1;background:var(--coral);border-color:var(--coral);" id="confirmOkBtn">Remove</button>
+  </div>
+</div>
+
+<div id="appRoot" style="display:none;">
+<aside class="sidebar">
+  <div class="sb-brand">
+    <div class="sb-mark"><svg class="icon"><use href="#ic-badge"/></svg></div>
+    <div class="sb-title">KZC<br>Shifts</div>
+  </div>
+  <nav class="sb-nav">
+    <button class="sb-item active" data-tab="overview">
+      <span class="sb-ic"><svg class="icon"><use href="#ic-calendar"/></svg></span><span>Overview</span>
+    </button>
+    <button class="sb-item" data-tab="log">
+      <span class="sb-ic"><svg class="icon"><use href="#ic-pencil"/></svg></span><span>Log data</span>
+    </button>
+    <button class="sb-item" data-tab="settings">
+      <span class="sb-ic"><svg class="icon"><use href="#ic-gear"/></svg></span><span>Settings</span>
+    </button>
+    <button class="sb-item" data-tab="profile">
+      <span class="sb-ic"><svg class="icon"><use href="#ic-user"/></svg></span><span>Profile</span>
+    </button>
+  </nav>
+  <div class="theme-toggle" id="themeToggleSidebar">
+    <span class="tt-lbl"><span id="themeIconSidebar" class="icon-inline-wrap"><svg class="icon icon-inline"><use href="#ic-moon"/></svg></span> Dark mode</span>
+    <span class="tt-switch"></span>
+  </div>
+  <div class="sb-foot">KidZania Cairo</div>
+</aside>
+
+<div class="wrap">
+
+  <!-- ===== TAB: OVERVIEW ===== -->
+  <div class="tab-panel active" id="tab-overview">
+
+    <div class="hero">
+      <div class="hero-top">
+        <div>
+          <div class="eyebrow"><span class="dot"></span>KZC Shifts</div>
+          <h1 id="heroGreeting">Welcome back to work!</h1>
+          <p class="sub">Every shift stamped, every pound counted. Here's how your KidZania hustle is looking.</p>
+        </div>
+        <div class="passport-badge">
+          <div class="num" id="heroNextDays">—</div>
+          <div class="lbl" id="heroNextLabel">days to next shift</div>
+        </div>
+      </div>
+      <div class="hero-stats">
+        <div class="stat-card accent">
+          <div class="k" id="statMonthLabel">This pay period earned</div>
+          <div class="v" id="statMonthTotal">E£0</div>
+        </div>
+        <div class="stat-card accent2">
+          <div class="k">All-time earned</div>
+          <div class="v" id="statAllTotal">E£0</div>
+        </div>
+        <div class="stat-card accent3">
+          <div class="k" id="statMonthHoursLabel">Hours this pay period</div>
+          <div class="v" id="statMonthHours">0h</div>
+        </div>
+        <div class="stat-card">
+          <div class="k">Shifts logged</div>
+          <div class="v" id="statShiftCount">0</div>
+        </div>
+      </div>
+      <div class="next-line" id="pendingNote" style="display:none;"></div>
+    </div>
+
+    <div class="panel">
+      <div class="cal-head">
+        <div class="month" id="calMonthLabel">—</div>
+        <div class="cal-nav">
+          <button class="icon-btn" id="prevMonth">‹</button>
+          <button class="icon-btn" id="todayBtn" style="width:auto;padding:0 10px;font-size:12px;">Today</button>
+          <button class="icon-btn" id="nextMonth">›</button>
+        </div>
+      </div>
+      <div class="cal-view-toggle">
+        <button class="view-tab active" id="monthViewBtn" data-view="month">Month</button>
+        <button class="view-tab" id="weekViewBtn" data-view="week">Week</button>
+      </div>
+      <div class="dow" id="calDow"><div>S</div><div>M</div><div>T</div><div>W</div><div>T</div><div>F</div><div>S</div></div>
+      <div class="cal-grid" id="calGrid"></div>
+      <div class="week-grid" id="weekGrid" style="display:none;"></div>
+      <div class="legend">
+        <span><span class="sw" style="background:var(--mint);"></span>AM shift</span>
+        <span><span class="sw" style="background:var(--violet);"></span>PM shift</span>
+        <span><span class="sw" style="background:var(--sky);"></span>Mid shift</span>
+        <span><span class="sw" style="background:var(--coral);"></span>AM + PM (double)</span>
+        <span><span class="sw" style="background:var(--paper-2); border:1px solid var(--line);"></span>Off day</span>
+        <span><span class="sw" style="background:transparent;border:2px solid var(--ink);"></span>Today</span>
+      </div>
+    </div>
+
+    <div class="panel" id="insightsPanel">
+      <h2>This pay period at a glance</h2>
+      <p class="desc">Where you've worked most, and your go-to shift type.</p>
+      <div class="hero-stats" style="margin-top:0;">
+        <div class="stat-card" style="background:var(--paper-2); border-color:var(--line);">
+          <div class="k" style="color:var(--mut-50);">Most common establishment</div>
+          <div class="v" id="statBusiestEst" style="color:var(--ink); font-size:18px;">—</div>
+        </div>
+        <div class="stat-card" style="background:var(--paper-2); border-color:var(--line);">
+          <div class="k" style="color:var(--mut-50);">Most common shift</div>
+          <div class="v" id="statCommonShift" style="color:var(--ink); font-size:18px;">—</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <h2>Shift log</h2>
+      <p class="desc">Every stamp in your passport, newest first.</p>
+      <div class="filter-bar" id="filterBar"></div>
+      <div id="logList"></div>
+    </div>
+  </div>
+
+  <!-- ===== TAB: LOG DATA ===== -->
+  <div class="tab-panel" id="tab-log">
+    <div class="tab-head">
+      <h1>Log data</h1>
+      <p class="sub-dark">Add a single shift, or paste your whole month from the sheet.</p>
+    </div>
+
+    <div class="panel">
+      <h2>Your establishments</h2>
+      <p class="desc">Save the places you work so you can tap instead of type.</p>
+      <div class="chip-row" id="estChipManage"></div>
+      <div class="field" style="margin-top:12px; margin-bottom:0;">
+        <label>Name</label>
+        <input type="text" id="newEstName" placeholder="e.g. Cairo Airport">
+      </div>
+      <button class="btn btn-ghost btn-block" style="margin-top:12px;" id="addEstBtn">＋ Add establishment</button>
+    </div>
+
+    <div class="panel">
+      <h2>Log a shift</h2>
+      <p class="desc">Pick the date and shift type — times are fixed (Fri &amp; Sat automatically use the later weekend closing time), so there's nothing to type.</p>
+
+      <div class="field">
+        <label>Date</label>
+        <input type="date" id="fDate">
+      </div>
+      <div class="field">
+        <label>Shift type</label>
+        <div class="chip-row" id="shiftTypePick"></div>
+      </div>
+      <div class="field" style="margin-bottom:0;">
+        <label>Establishment</label>
+        <div class="chip-row" id="estChipPick"></div>
+        <input type="text" id="fEst" list="estList" placeholder="or type a new one">
+        <datalist id="estList"></datalist>
+      </div>
+      <div class="field" style="margin-top:14px; margin-bottom:0;">
+        <label>Notes / swap (optional)</label>
+        <input type="text" id="fNotes" placeholder="e.g. covering for Ahmed">
+      </div>
+      <button class="btn btn-primary btn-block" style="margin-top:14px;" id="addShiftBtn">＋ Stamp this shift</button>
+    </div>
+
+    <div class="panel">
+      <h2>Bulk import from Google Sheet</h2>
+      <p class="desc">Your sheet just tells you AM, PM, or OFF for each date — set what those actually mean below, then paste.</p>
+
+      <div class="row2">
+        <div class="field" style="margin-bottom:0;">
+          <label>AM shift = </label>
+          <select id="amVariant">
+            <option value="AM_MID">Mid — 9:45 AM to 4:45 PM</option>
+            <option value="AM_LONG">Long — 9:45 AM to 6:45 PM</option>
+          </select>
+        </div>
+        <div class="field" style="margin-bottom:0;">
+          <label>PM shift = </label>
+          <select id="pmVariant">
+            <option value="PM_MID">Mid — 4:15 PM to close</option>
+            <option value="PM_LONG">Long — 1:15 PM to close</option>
+          </select>
+        </div>
+      </div>
+      <div class="hint" style="margin-top:6px;">Every AM code in your paste uses the AM option above, every PM code uses the PM option above. Use <strong>FULL</strong> for a whole-day shift (10 AM to 10 PM, fixed). On Thu &amp; Fri, "close" automatically becomes 11:15 PM (and PM Long starts 2:15 PM) instead of the weekday 10:15 PM.</div>
+
+      <div class="row2" id="wholeMonthField" style="margin-top:14px;">
+        <div class="field" style="margin-bottom:0;">
+          <label>First day of this sequence</label>
+          <input type="date" id="wholeMonthStart">
+        </div>
+      </div>
+
+      <div class="field" style="margin-top:14px;">
+        <label>Paste your shifts</label>
+        <textarea id="bulkInput" placeholder="Paste the whole row of codes, space-separated:&#10;PM OFF AM AM PM OFF OFF AM"></textarea>
+      </div>
+      <div class="hint" id="bulkHint">Paste the whole row as codes, space-separated — e.g. <strong>PM OFF AM FULL PM OFF OFF AM…</strong>. The 1st code lands on the "First day" date above, the 2nd on the next day, and so on. OFF days are skipped — they just show as free on your calendar. Rate is fixed at <strong id="bulkRateHint">E£50/hr</strong> for every shift.</div>
+
+      <button class="btn btn-ghost btn-block" style="margin-top:14px;" id="previewBtn">Preview import</button>
+      <div id="importPreview"></div>
+      <button class="btn btn-primary btn-block" style="margin-top:12px; display:none;" id="confirmImportBtn">Confirm &amp; add to passport</button>
+    </div>
+  </div>
+
+  <!-- ===== TAB: SETTINGS ===== -->
+  <div class="tab-panel" id="tab-settings">
+    <div class="tab-head">
+      <h1>Settings</h1>
+      <p class="sub-dark">Your name, and cleaning up data.</p>
+    </div>
+
+    <div class="panel">
+      <h2>Appearance</h2>
+      <p class="desc">Switch between light and dark passport.</p>
+      <div class="theme-toggle" id="themeToggleSettings" style="background:var(--paper-2); border-color:var(--line); margin-bottom:0;">
+        <span class="tt-lbl" style="color:var(--ink); opacity:.75;"><span id="themeIconSettings" class="icon-inline-wrap"><svg class="icon icon-inline"><use href="#ic-moon"/></svg></span> Dark mode</span>
+        <span class="tt-switch"></span>
+      </div>
+    </div>
+
+    <!-- hidden inputs kept for JS compatibility -->
+    <input type="text" id="userNameInput" style="display:none">
+
+    <div class="panel" style="margin-top:22px;">
+      <h2>Remove a specific month</h2>
+      <p class="desc">Clear every shift logged in one month, leaving everything else untouched.</p>
+      <div class="field" style="margin-bottom:0;">
+        <label>Month</label>
+        <input type="month" id="removeMonthInput">
+      </div>
+      <button class="btn btn-ghost btn-block" style="margin-top:14px; border-color:var(--coral); color:var(--coral);" id="removeMonthBtn">Remove shifts in this month</button>
+    </div>
+
+    <div class="panel">
+      <h2>Danger zone</h2>
+      <p class="desc">These clear data permanently — there's no undo.</p>
+      <button class="btn btn-block" style="background:var(--coral); border-color:var(--coral); color:#fff;" id="removeAllShiftsBtn">Remove all shifts</button>
+      <button class="btn btn-block" style="margin-top:12px; background:var(--coral); border-color:var(--coral); color:#fff;" id="removeAllEstsBtn">Remove all establishments</button>
+    </div>
+
+    <div class="panel">
+      <h2>Account</h2>
+      <p class="desc" id="accountEmailDesc">Signed in.</p>
+      <p class="desc" id="cloudSyncDesc" style="display:none;"></p>
+      <button class="btn btn-ghost btn-block" id="logoutBtn">Log out</button>
+    </div>
+  </div>
+
+  <!-- ===== TAB: PROFILE ===== -->
+  <div class="tab-panel" id="tab-profile">
+    <div class="tab-head">
+      <h1>Profile</h1>
+      <p class="sub-dark">Your account and shift summary at a glance.</p>
+    </div>
+
+    <!-- Avatar + name card -->
+    <div class="panel" style="text-align:center; padding:30px 24px;">
+      <div id="profileAvatar" style="
+        width:72px; height:72px; border-radius:50%; margin:0 auto 14px;
+        background:var(--ink); color:var(--paper);
+        display:flex; align-items:center; justify-content:center;
+        font-family:'Baloo 2',sans-serif; font-size:28px; font-weight:800;
+        border:3px solid var(--sun);
+      ">—</div>
+      <!-- Name display + inline edit -->
+      <div id="profileNameDisplay" style="display:flex; align-items:center; justify-content:center; gap:8px; margin-bottom:4px;">
+        <div id="profileName" style="font-family:'Baloo 2',sans-serif; font-size:22px; font-weight:800;">—</div>
+        <button id="profileEditNameBtn" title="Edit name" style="
+          background:none; border:none; cursor:pointer; color:var(--mut-40); padding:4px; border-radius:8px; line-height:0;
+        "><svg class="icon" style="width:16px;height:16px;"><use href="#ic-pencil"/></svg></button>
+      </div>
+      <div id="profileNameEditRow" style="display:none; gap:8px; margin-bottom:8px; justify-content:center;">
+        <input type="text" id="profileNameInput" placeholder="e.g. Karim" style="
+          padding:9px 12px; border-radius:12px; border:2px solid var(--sun);
+          background:var(--paper); color:var(--ink); font-family:'Inter'; font-size:14px; font-weight:600;
+          outline:none; width:160px;
+        ">
+        <button id="profileSaveNameBtn" class="btn btn-primary" style="padding:9px 16px; font-size:13px;">Save</button>
+        <button id="profileCancelNameBtn" class="btn btn-ghost" style="padding:9px 12px; font-size:13px;">✕</button>
+      </div>
+      <div id="profileEmail" style="font-size:13px; color:var(--mut-55); font-weight:600;">—</div>
+    </div>
+
+    <!-- Stats summary -->
+    <div class="panel">
+      <h2>Shift stats</h2>
+      <p class="desc">Your all-time numbers from your passport.</p>
+      <div class="hero-stats" style="margin-top:0; background:transparent;">
+        <div class="stat-card" style="background:var(--paper-2); border-color:var(--line);">
+          <div class="k" style="color:var(--mut-50);">Total shifts</div>
+          <div class="v" id="profileStatShifts" style="color:var(--ink);">0</div>
+        </div>
+        <div class="stat-card" style="background:var(--paper-2); border-color:var(--line);">
+          <div class="k" style="color:var(--mut-50);">Total hours</div>
+          <div class="v" id="profileStatHours" style="color:var(--ink);">0h</div>
+        </div>
+        <div class="stat-card" style="background:var(--paper-2); border-color:var(--line);">
+          <div class="k" style="color:var(--mut-50);">All-time earned</div>
+          <div class="v" id="profileStatEarned" style="color:var(--ink);">E£0</div>
+        </div>
+        <div class="stat-card" style="background:var(--paper-2); border-color:var(--line);">
+          <div class="k" style="color:var(--mut-50);">Establishments</div>
+          <div class="v" id="profileStatEsts" style="color:var(--ink);">0</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Salary history -->
+    <div class="panel">
+      <h2>Salary history</h2>
+      <p class="desc">Earnings by pay period — the 20th of one month through the 20th of the next.</p>
+      <div id="salaryHistoryList" style="display:flex; flex-direction:column; gap:10px;"></div>
+    </div>
+
+    <!-- Most active month -->
+    <div class="panel">
+      <h2>Most active month</h2>
+      <p class="desc">The month you worked the hardest.</p>
+      <div style="display:flex; align-items:center; gap:16px; flex-wrap:wrap;">
+        <div style="font-family:'Baloo 2',sans-serif; font-size:32px; font-weight:800; color:var(--sun);" id="profileBestMonth">—</div>
+        <div>
+          <div style="font-size:13px; font-weight:700; color:var(--mut-55);" id="profileBestMonthSub">No shifts logged yet</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Account details -->
+    <div class="panel">
+      <h2>Account</h2>
+      <p class="desc">Your KZC Shifts login details.</p>
+      <div style="display:flex; flex-direction:column; gap:12px;">
+        <div style="display:flex; justify-content:space-between; align-items:center; padding:12px 14px; background:var(--paper-2); border-radius:12px; border:1.5px solid var(--line);">
+          <span style="font-size:12px; font-weight:700; color:var(--mut-50); text-transform:uppercase; letter-spacing:.04em;">Email</span>
+          <span style="font-size:13.5px; font-weight:700; color:var(--ink);" id="profileEmailDetail">—</span>
+        </div>
+        <div style="display:flex; justify-content:space-between; align-items:center; padding:12px 14px; background:var(--paper-2); border-radius:12px; border:1.5px solid var(--line);">
+          <span style="font-size:12px; font-weight:700; color:var(--mut-50); text-transform:uppercase; letter-spacing:.04em;">Display name</span>
+          <span style="font-size:13.5px; font-weight:700; color:var(--ink);" id="profileNameDetail">Not set</span>
+        </div>
+        <div style="display:flex; justify-content:space-between; align-items:center; padding:12px 14px; background:var(--paper-2); border-radius:12px; border:1.5px solid var(--line);">
+          <span style="font-size:12px; font-weight:700; color:var(--mut-50); text-transform:uppercase; letter-spacing:.04em;">Account status</span>
+          <span style="font-size:13px; font-weight:800; color:var(--mint);">✓ Signed in &amp; synced</span>
+        </div>
+      </div>
+      <button class="btn btn-ghost btn-block" style="margin-top:14px;" id="profileLogoutBtn">Log out</button>
+    </div>
+  </div>
+
+  <!-- Day-off request (shown only for staff on a team) -->
+  <div class="panel" id="dayOffRequestPanel" style="display:none;">
+    <h2>Day-off requests</h2>
+    <p class="desc">Request a day off — your coordinator will approve or reject it.</p>
+    <button class="dayoff-request-btn" id="openDayOffBtn">Request a day off</button>
+  </div>
+
+  <footer>
+    KZC Shifts · your data is signed in and synced to your own account<br>
+    <span class="credit">Made by Karim</span> · © <span id="footYear">2026</span> KZC Shifts. All rights reserved.
+  </footer>
+</div>
+
+<!-- ===== MOBILE FLOATING MENU ===== -->
+<div class="fab-nav" id="fabNav">
+  <div class="fab-panel" id="fabPanel">
+    <div class="fab-bar" id="fabBar">
+      <span class="fab-burger"><span></span><span></span><span></span></span>
+    </div>
+    <div class="fab-items" id="fabItems">
+      <button class="fab-item active" data-tab="overview">
+        <svg class="icon"><use href="#ic-calendar"/></svg><span>Overview</span>
+      </button>
+      <button class="fab-item" data-tab="log">
+        <svg class="icon"><use href="#ic-pencil"/></svg><span>Log data</span>
+      </button>
+      <button class="fab-item" data-tab="settings">
+        <svg class="icon"><use href="#ic-gear"/></svg><span>Settings</span>
+      </button>
+      <button class="fab-item" data-tab="profile">
+        <svg class="icon"><use href="#ic-user"/></svg><span>Profile</span>
+      </button>
+    </div>
+  </div>
+</div>
+
+
+<div class="toast" id="toast"></div>
+<div class="snackbar" id="undoSnackbar">
+  <span id="undoSnackbarMsg">Shift removed</span>
+  <button class="sb-undo-btn" id="undoSnackbarBtn">Undo</button>
+</div>
+<div class="sheet-backdrop" id="sheetBackdrop"></div>
+<div class="sheet" id="daySheet">
+  <div class="handle"></div>
+  <h3 id="sheetTitle">Shifts</h3>
+  <div id="sheetBody"></div>
+  <button class="sheet-close" id="sheetClose">Close</button>
+</div>
+
+<!-- ===== ADD/EDIT EXPENSE MODAL ===== -->
+<div class="sheet-backdrop" id="expenseEditBackdrop"></div>
+<div class="sheet" id="expenseEditSheet">
+  <div class="handle"></div>
+  <h3>Shift expense</h3>
+  <p style="font-size:13px;color:var(--mut-55);margin:0 0 14px;">For the shift on <strong id="expenseEditDate"></strong></p>
+  <div class="field" style="margin-bottom:14px;">
+    <label style="display:block; font-size:12px; font-weight:700; color:var(--mut-55); margin-bottom:6px; text-transform:uppercase; letter-spacing:.03em;">Amount</label>
+    <input type="number" id="expenseEditInput" class="auth-input" placeholder="e.g. 50" min="0" step="0.01">
+  </div>
+  <div class="field" style="margin-bottom:0;">
+    <label style="display:block; font-size:12px; font-weight:700; color:var(--mut-55); margin-bottom:6px; text-transform:uppercase; letter-spacing:.03em;">Note (optional)</label>
+    <input type="text" id="expenseEditNoteInput" class="auth-input" placeholder="e.g. Transport">
+  </div>
+  <div style="display:flex; gap:10px; margin-top:16px;">
+    <button class="btn btn-ghost" id="expenseEditCancelBtn" style="flex:1;">Cancel</button>
+    <button class="btn btn-ghost" id="expenseEditClearBtn" style="flex:1; border-color:var(--coral); color:var(--coral);">Clear</button>
+    <button class="btn btn-primary" id="expenseEditSaveBtn" style="flex:1;">Save</button>
+  </div>
+</div>
+
+<!-- ===== EDIT ESTABLISHMENT MODAL ===== -->
+<div class="sheet-backdrop" id="estEditBackdrop"></div>
+<div class="sheet" id="estEditSheet">
+  <div class="handle"></div>
+  <h3>Set establishment</h3>
+  <p style="font-size:13px;color:var(--mut-55);margin:0 0 14px;">For the shift on <strong id="estEditDate"></strong></p>
+  <div class="chip-row" id="estEditChips" style="margin-bottom:10px;"></div>
+  <div class="field" style="margin-bottom:0;">
+    <input type="text" id="estEditInput" list="estList" placeholder="Type or pick an establishment">
+  </div>
+  <div style="display:flex;gap:10px;margin-top:14px;">
+    <button class="btn btn-ghost" style="flex:1;" id="estEditCancelBtn">Cancel</button>
+    <button class="btn btn-primary btn-block" style="flex:1;" id="estEditSaveBtn">Save</button>
+  </div>
+</div>
+
+<!-- ===== EDIT SHIFT MODAL ===== -->
+<div class="sheet-backdrop" id="shiftEditBackdrop"></div>
+<div class="sheet" id="shiftEditSheet">
+  <div class="handle"></div>
+  <h3>Edit shift</h3>
+  <p style="font-size:13px;color:var(--mut-55);margin:0 0 14px;">For <strong id="shiftEditDate"></strong></p>
+  <div class="field">
+    <label>Shift type</label>
+    <div class="chip-row" id="shiftEditTypePick"></div>
+  </div>
+  <div class="field" style="margin-bottom:0;">
+    <label>Establishment</label>
+    <div class="chip-row" id="shiftEditEstChips" style="margin-bottom:10px;"></div>
+    <input type="text" id="shiftEditEstInput" list="estList" placeholder="Type or pick an establishment">
+  </div>
+  <div class="field" style="margin-top:14px; margin-bottom:0;">
+    <label>Notes / swap (optional)</label>
+    <input type="text" id="shiftEditNotesInput" placeholder="e.g. covering for Ahmed">
+  </div>
+  <div style="display:flex;gap:10px;margin-top:14px;">
+    <button class="btn btn-ghost" style="flex:1;background:var(--coral);border-color:var(--coral);color:#fff;" id="shiftEditDeleteBtn">Remove</button>
+    <button class="btn btn-primary btn-block" style="flex:1;" id="shiftEditSaveBtn">Save</button>
+  </div>
+  <button class="btn btn-ghost btn-block" style="margin-top:10px;" id="shiftEditCancelBtn">Cancel</button>
+</div>
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.17.1/firebase-app.js";
+  import {
+    getAuth, onAuthStateChanged,
+    createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut
+  } from "https://www.gstatic.com/firebasejs/12.17.1/firebase-auth.js";
+  import {
+    getFirestore, doc, getDoc, setDoc, onSnapshot,
+    collection, query, where, addDoc, updateDoc, deleteField,
+    getDocs
+  } from "https://www.gstatic.com/firebasejs/12.17.1/firebase-firestore.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyBwPnAI_CzsZb1d8rJLSCB2AlhXvw9xleY",
+    authDomain: "kzc-shifts.firebaseapp.com",
+    projectId: "kzc-shifts",
+    storageBucket: "kzc-shifts.firebasestorage.app",
+    messagingSenderId: "131952100799",
+    appId: "1:131952100799:web:7bf9f8b3b0a9b427254d0a",
+    measurementId: "G-4GEJR8HZG6"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const db = getFirestore(app);
+
+  let currentUid = null;
+  let readyResolve;
+  const readyPromise = new Promise(res => { readyResolve = res; });
+
+  async function cloudLoad(){
+    const uid = await readyPromise;
+    const snap = await getDoc(doc(db, "shiftData", uid));
+    return snap.exists() ? snap.data() : null;
+  }
+
+  // A debounced cloud save can get killed mid-flight: if the user closes the tab / backgrounds
+  // the PWA / the phone locks before the timer fires, the setTimeout callback never runs and
+  // nothing ever reaches Firestore — the edit only ever lived in localStorage on that one device.
+  // Fix: (1) keep the *latest* pending write in memory so it can be flushed on demand, and
+  // (2) flush immediately (bypassing the debounce) whenever the page is about to be hidden or
+  // unloaded — covers switching apps, locking the screen, and closing the tab.
+  let saveTimer = null;
+  let pendingUid = null;
+  let pendingData = null;
+  let saveInFlight = null;
+
+  function setCloudStatus(state){
+    // state: "saving" | "saved" | "error" | ""
+    window.__cloudSyncState = state;
+    if(typeof window.__onCloudSyncStateChanged === "function") window.__onCloudSyncStateChanged(state);
+  }
+
+  function doWrite(uid, data){
+    setCloudStatus("saving");
+    saveInFlight = setDoc(doc(db, "shiftData", uid), data)
+      .then(() => { setCloudStatus("saved"); })
+      .catch(err => {
+        console.error("Firebase save failed:", err);
+        setCloudStatus("error");
+      });
+    return saveInFlight;
+  }
+
+  async function cloudSave(data){
+    const uid = await readyPromise;
+    pendingUid = uid;
+    pendingData = data;
+    clearTimeout(saveTimer);
+    saveTimer = setTimeout(() => {
+      const u = pendingUid, d = pendingData;
+      pendingUid = null; pendingData = null;
+      if(u && d) doWrite(u, d);
+    }, 600);
+  }
+
+  // Bypass the debounce and write whatever is pending right now. Safe to call even if
+  // nothing is pending (no-op). Returns a promise so callers can await it if needed.
+  function cloudFlush(){
+    clearTimeout(saveTimer);
+    if(pendingUid && pendingData){
+      const u = pendingUid, d = pendingData;
+      pendingUid = null; pendingData = null;
+      return doWrite(u, d);
+    }
+    return saveInFlight || Promise.resolve();
+  }
+
+  document.addEventListener("visibilitychange", () => {
+    if(document.visibilityState === "hidden") cloudFlush();
+  });
+  window.addEventListener("pagehide", () => { cloudFlush(); });
+  window.addEventListener("blur", () => { if(pendingUid) cloudFlush(); });
+
+  function friendlyAuthError(code){
+    const map = {
+      "auth/invalid-email": "That email doesn't look right.",
+      "auth/missing-password": "Enter a password.",
+      "auth/weak-password": "Password should be at least 6 characters.",
+      "auth/email-already-in-use": "An account already exists for that email — try logging in.",
+      "auth/invalid-credential": "Wrong email or password.",
+      "auth/wrong-password": "Wrong email or password.",
+      "auth/user-not-found": "No account found for that email — try signing up.",
+      "auth/too-many-requests": "Too many attempts. Wait a bit and try again."
+    };
+    return map[code] || "Something went wrong. Try again.";
+  }
+
+  // Live cross-device sync: keeps a realtime listener on this account's doc so that if
+  // another device (or another tab) writes new data, this session picks it up without
+  // needing a manual refresh or re-login. `localWriteMarker` lets us ignore the echo of
+  // our own writes (Firestore fires the listener for those too).
+  let localWriteMarker = 0;
+  let unsubSnapshot = null;
+  function watchCloud(uid, onRemoteChange){
+    if(unsubSnapshot) unsubSnapshot();
+    unsubSnapshot = onSnapshot(doc(db, "shiftData", uid), (snap) => {
+      if(!snap.exists()) return;
+      const data = snap.data();
+      if(data && data._writeMarker === localWriteMarker) return; // our own echo, ignore
+      onRemoteChange(data);
+    }, err => console.error("Cloud watch failed:", err));
+  }
+  function stopWatchingCloud(){
+    if(unsubSnapshot){ unsubSnapshot(); unsubSnapshot = null; }
+  }
+  // Tag every outgoing write with a marker so the listener above can tell "this just came
+  // back from my own setDoc" apart from "another device changed this".
+  const _origDoWrite = doWrite;
+  doWrite = function(uid, data){
+    localWriteMarker++;
+    data._writeMarker = localWriteMarker;
+    return _origDoWrite(uid, data);
+  };
+
+  window.__fb = {
+    cloudLoad, cloudSave, cloudFlush, watchCloud, stopWatchingCloud, ready: readyPromise,
+    signUp: (email, pw) => createUserWithEmailAndPassword(auth, email, pw),
+    logIn: (email, pw) => signInWithEmailAndPassword(auth, email, pw),
+    logOut: async () => { stopWatchingCloud(); await cloudFlush(); return signOut(auth); },
+    friendlyAuthError
+  };
+
+  // ===== SCREEN SWITCHING =====
+  const loadingScreen = document.getElementById("loadingScreen");
+  const authScreen = document.getElementById("authScreen");
+  const appRoot = document.getElementById("appRoot");
+
+  function showApp(){
+    loadingScreen.style.display = "none";
+    authScreen.style.display = "none";
+    appRoot.style.display = "";
+    const ar = document.getElementById("adminRoot");
+    if(ar) ar.style.display = "none";
+  }
+  function showAuth(){
+    loadingScreen.style.display = "none";
+    appRoot.style.display = "none";
+    const ar = document.getElementById("adminRoot");
+    if(ar) ar.style.display = "none";
+    authScreen.style.display = "flex";
+  }
+
+  // ===== COORDINATOR: FIRESTORE HELPERS =====
+  // Exposed on window.__coord so the second <script> block and coord module can call them
+  window.__coordDb = db;
+  window.__coordFirestore = {
+    doc, getDoc, setDoc, onSnapshot, collection, query, where,
+    addDoc, updateDoc, deleteField, getDocs
+  };
+
+  async function initStaffUser(uid, email){
+    await setDoc(doc(db, "users", uid), {
+      role: "staff",
+      email: (email || "").trim().toLowerCase()
+    }, { merge: true });
+  }
+
+  let lastSeenUid = null;
+  onAuthStateChanged(auth, async (user) => {
+    if(user){
+      currentUid = user.uid;
+      readyResolve(user.uid);
+      const emailDesc = document.getElementById("accountEmailDesc");
+      if(emailDesc) emailDesc.textContent = "Signed in as " + (user.email || "anonymous") + ".";
+      window.__currentUserEmail = user.email || "";
+      window.__currentUid = user.uid;
+
+      // Handle fresh signup: create the user doc (all signups are staff;
+      // admin accounts are granted by setting role:"admin" on a user doc
+      // directly in Firestore, not through this signup form).
+      const isFreshSignup = sessionStorage.getItem("kidzania_fresh_signup") === "1";
+      if(isFreshSignup){
+        sessionStorage.removeItem("kidzania_fresh_signup");
+        sessionStorage.removeItem("kidzania_signup_role");
+        await initStaffUser(user.uid, user.email);
+      }
+
+      // Read role from Firestore
+      let userRole = "staff";
+      let _userDocData = {};
+      try{
+        let userSnap = await getDoc(doc(db, "users", user.uid));
+        if(!userSnap.exists() && !isFreshSignup){
+          // Self-heal: this Auth account has no matching "users" doc. This can
+          // happen if the fresh-signup write above never ran (e.g. the tab was
+          // refreshed/closed mid-signup, so the sessionStorage flag was lost).
+          // Create it now as staff so the account becomes discoverable.
+          await initStaffUser(user.uid, user.email);
+          userSnap = await getDoc(doc(db, "users", user.uid));
+        }
+        if(userSnap.exists()){ _userDocData = userSnap.data(); userRole = _userDocData.role || "staff"; }
+      } catch(e){ console.warn("Could not read user role:", e); }
+
+      window.__userRole = userRole;
+      window.__userDisplayName = _userDocData.name || "";
+
+      if(userRole === "admin"){
+        showAdmin(user);
+      } else {
+        if(typeof renderProfile === "function") setTimeout(renderProfile, 0);
+        if(lastSeenUid !== user.uid && typeof window.__onUserChanged === "function"){
+          lastSeenUid = user.uid;
+          window.__onUserChanged(user.uid);
+        }
+        // Init staff features (assigned shifts, day-off requests)
+        setTimeout(()=>{
+          if(typeof window.__staffCoordInit === "function") window.__staffCoordInit(user.uid, _userDocData);
+        }, 200);
+        showApp();
+      }
+    } else {
+      lastSeenUid = null;
+      currentUid = null;
+      window.__userRole = null;
+      if(typeof window.__onUserSignedOut === "function") window.__onUserSignedOut();
+      if(typeof window.__adminLogout === "function") window.__adminLogout();
+      if(typeof window.__staffCoordLogout === "function") window.__staffCoordLogout();
+      showAuth();
+    }
+  });
+
+  function showAdmin(user){
+    loadingScreen.style.display = "none";
+    authScreen.style.display = "none";
+    appRoot.style.display = "none";
+    const ar = document.getElementById("adminRoot");
+    if(ar) ar.style.display = "flex";
+    if(typeof window.__adminInit === "function") window.__adminInit(user);
+  }
+
+  // ===== AUTH FORM WIRING =====
+  let authMode = "login"; // or "signup"
+  const authTabLogin = document.getElementById("authTabLogin");
+  const authTabSignup = document.getElementById("authTabSignup");
+  const authSubmitBtn = document.getElementById("authSubmitBtn");
+  const authSwitchText = document.getElementById("authSwitchText");
+  const authSwitchBtn = document.getElementById("authSwitchBtn");
+  const authError = document.getElementById("authError");
+  const authEmail = document.getElementById("authEmail");
+  const authPassword = document.getElementById("authPassword");
+  const authPwToggle = document.getElementById("authPwToggle");
+
+  authPwToggle.addEventListener("click", () => {
+    const showing = authPassword.type === "text";
+    authPassword.type = showing ? "password" : "text";
+    authPwToggle.classList.toggle("is-visible", !showing);
+    authPwToggle.setAttribute("aria-pressed", String(!showing));
+    authPwToggle.setAttribute("aria-label", showing ? "Show password" : "Hide password");
+    authPassword.focus({ preventScroll: true });
+  });
+
+  function setAuthMode(mode){
+    authMode = mode;
+    authError.style.display = "none";
+    if(mode === "login"){
+      authTabLogin.classList.add("active");
+      authTabSignup.classList.remove("active");
+      authSubmitBtn.textContent = "Log in";
+      authSwitchText.innerHTML = 'Don\'t have an account? <button type="button" id="authSwitchBtn">Sign up</button>';
+      authPassword.setAttribute("autocomplete", "current-password");
+    } else {
+      authTabSignup.classList.add("active");
+      authTabLogin.classList.remove("active");
+      authSubmitBtn.textContent = "Sign up";
+      authSwitchText.innerHTML = 'Already have an account? <button type="button" id="authSwitchBtn">Log in</button>';
+      authPassword.setAttribute("autocomplete", "new-password");
+    }
+    document.getElementById("authSwitchBtn").addEventListener("click", () => setAuthMode(mode === "login" ? "signup" : "login"));
+  }
+  authTabLogin.addEventListener("click", () => setAuthMode("login"));
+  authTabSignup.addEventListener("click", () => setAuthMode("signup"));
+  document.getElementById("authSwitchBtn").addEventListener("click", () => setAuthMode("signup"));
+
+  async function submitAuth(){
+    const email = authEmail.value.trim();
+    const pw = authPassword.value;
+    authError.style.display = "none";
+    if(!email || !pw){
+      authError.textContent = "Enter both email and password.";
+      authError.style.display = "block";
+      return;
+    }
+    authSubmitBtn.disabled = true;
+    const prevLabel = authSubmitBtn.textContent;
+    authSubmitBtn.textContent = "Please wait…";
+    try{
+      if(authMode === "signup"){
+        sessionStorage.setItem("kidzania_fresh_signup", "1");
+        await window.__fb.signUp(email, pw);
+      } else {
+        await window.__fb.logIn(email, pw);
+      }
+      // onAuthStateChanged will flip the screen to the app
+    } catch(err){
+      sessionStorage.removeItem("kidzania_fresh_signup");
+      sessionStorage.removeItem("kidzania_signup_role");
+      authError.textContent = friendlyAuthError(err.code);
+      authError.style.display = "block";
+      authSubmitBtn.disabled = false;
+      authSubmitBtn.textContent = prevLabel;
+    }
+  }
+  authSubmitBtn.addEventListener("click", submitAuth);
+  authPassword.addEventListener("keydown", (e) => { if(e.key === "Enter") submitAuth(); });
+  authEmail.addEventListener("keydown", (e) => { if(e.key === "Enter") authPassword.focus(); });
+  const authFootYearEl = document.getElementById("authFootYear");
+  if(authFootYearEl) authFootYearEl.textContent = new Date().getFullYear();
+</script>
+
+<script>
+(function(){
+  // Per-account namespacing: each Firebase uid gets its own localStorage slot,
+  // so switching accounts on the same device never shows another account's data.
+  let activeUid = null;
+  function storeKeyFor(uid){ return "kidzania_shift_passport_v1:" + uid; }
+  function settingsKeyFor(uid){ return "kidzania_shift_settings_v1:" + uid; }
+  const THEME_KEY = "kidzania_shift_theme_v1"; // theme is not sensitive, stays device-wide
+
+  // ===== BODY SCROLL LOCK (prevents background scroll while any sheet/modal is open) =====
+  // Idempotent: re-checks after every open/close whether ANY overlay is still showing,
+  // so it stays correct even when sheets swap into each other (e.g. day sheet -> edit sheet).
+  function scrollHost(){
+    // On mobile, .wrap is the actual scrolling element (see @media 900px lock in CSS);
+    // on desktop the page itself still scrolls normally.
+    if(window.matchMedia && window.matchMedia("(max-width:900px)").matches){
+      const w = document.querySelector(".wrap");
+      if(w) return w;
+    }
+    return document.scrollingElement || document.documentElement;
+  }
+
+  let _bodyScrollLocked = false;
+  let _scrollLockY = 0;
+  function syncBodyScrollLock(){
+    const anyOpen = !!document.querySelector(".sheet-backdrop.show");
+    const host = scrollHost();
+    if(anyOpen && !_bodyScrollLocked){
+      _bodyScrollLocked = true;
+      _scrollLockY = host.scrollTop || window.scrollY || window.pageYOffset || 0;
+      document.body.style.position = "fixed";
+      document.body.style.top = (-_scrollLockY) + "px";
+      document.body.style.left = "0";
+      document.body.style.right = "0";
+      document.body.style.width = "100%";
+    } else if(!anyOpen && _bodyScrollLocked){
+      _bodyScrollLocked = false;
+      document.body.style.position = "";
+      document.body.style.top = "";
+      document.body.style.left = "";
+      document.body.style.right = "";
+      document.body.style.width = "";
+      host.scrollTop = _scrollLockY;
+      window.scrollTo(0, _scrollLockY);
+    }
+  }
+
+  // ===== DARK MODE =====
+  function applyTheme(theme){
+    document.documentElement.setAttribute("data-theme", theme);
+    const iconId = theme === "dark" ? "ic-sun" : "ic-moon";
+    const iconHtml = '<svg class="icon icon-inline"><use href="#'+iconId+'"/></svg>';
+    const s1 = document.getElementById("themeIconSidebar");
+    const s2 = document.getElementById("themeIconSettings");
+    if(s1) s1.innerHTML = iconHtml;
+    if(s2) s2.innerHTML = iconHtml;
+  }
+  let currentTheme = localStorage.getItem(THEME_KEY) || "light";
+  applyTheme(currentTheme);
+  function toggleTheme(){
+    currentTheme = currentTheme === "dark" ? "light" : "dark";
+    localStorage.setItem(THEME_KEY, currentTheme);
+    applyTheme(currentTheme);
+  }
+  document.getElementById("themeToggleSidebar").addEventListener("click", toggleTheme);
+  document.getElementById("themeToggleSettings").addEventListener("click", toggleTheme);
+
+  // Thursday & Friday run on the "weekend" clock (later PM close); Saturday–Wednesday
+  // run on the standard weekday clock.
+  function isWeekendDate(dateStr){
+    if(!dateStr) return false;
+    const [y,m,d] = dateStr.split("-").map(Number);
+    const day = new Date(y, m-1, d).getDay(); // 0=Sun ... 4=Thu, 5=Fri, 6=Sat
+    return day === 4 || day === 5;
+  }
+  function buildShiftTypes(weekend){
+    const pmEnd = weekend ? "23:15" : "22:15";
+    const pmEndLbl = weekend ? "11:15 PM" : "10:15 PM";
+    const pmLongStart = weekend ? "14:15" : "13:15";
+    const pmLongStartLbl = weekend ? "2:15 PM" : "1:15 PM";
+    const wholeEnd = weekend ? "23:00" : "22:00";
+    const wholeEndLbl = weekend ? "11 PM" : "10 PM";
+    const types = [
+      { code:"WHOLE",   period:"AM", start:"10:00", end:wholeEnd,    label:`Whole day (10 AM–${wholeEndLbl})` },
+      { code:"AM_MID",  period:"AM", start:"09:45", end:"16:45",    label:"AM · Mid (9:45 AM–4:45 PM)" },
+      { code:"AM_LONG", period:"AM", start:"09:45", end:"18:45",    label:"AM · Long (9:45 AM–6:45 PM)" },
+      { code:"MID",     period:"PM", start:"12:30", end:"21:30",    label:"Mid (12:30 PM–9:30 PM)" },
+      { code:"PM_MID",  period:"PM", start:"16:15", end:pmEnd,      label:`PM · Mid (4:15 PM–${pmEndLbl})` },
+      { code:"PM_LONG", period:"PM", start:pmLongStart, end:pmEnd,  label:`PM · Long (${pmLongStartLbl}–${pmEndLbl})` }
+    ];
+    types.forEach(t => t.hours = hoursBetween(t.start, t.end));
+    return types;
+  }
+  const SHIFT_TYPES_WEEKDAY = buildShiftTypes(false);
+  const SHIFT_TYPES_WEEKEND = buildShiftTypes(true);
+  const SHIFT_TYPES_ALL = SHIFT_TYPES_WEEKDAY.concat(SHIFT_TYPES_WEEKEND);
+  function shiftTypesFor(weekend){ return weekend ? SHIFT_TYPES_WEEKEND : SHIFT_TYPES_WEEKDAY; }
+  function shiftTypeByCode(code, weekend){ return shiftTypesFor(weekend).find(t => t.code === code); }
+  const TRANSPORT_FLAT = 50; // E£ transport allowance added per shift
+  function calcPay(hours, rate){ return (hours * rate) + TRANSPORT_FLAT; }
+
+  function defaultSettings(){
+    return {
+      defaultRate: "", defaultEst: "", currency: "E£",
+      establishments: [],
+      bulkAmVariant: "AM_MID", bulkPmVariant: "PM_MID", userName: ""
+    };
+  }
+  // Start empty; real data is loaded once we know which account is signed in (see __onUserChanged below).
+  let shifts = [];
+  let settings = defaultSettings();
+  function normalizeSettings(){
+    if(!Array.isArray(settings.establishments)) settings.establishments = [];
+    // migrate old fixed-code names (AM7/AM9/PM6/PM8) to the new weekday-aware codes
+    const LEGACY_CODE_MAP = { AM7:"AM_MID", AM9:"AM_LONG", PM6:"PM_MID", PM8:"PM_LONG" };
+    if(LEGACY_CODE_MAP[settings.bulkAmVariant]) settings.bulkAmVariant = LEGACY_CODE_MAP[settings.bulkAmVariant];
+    if(LEGACY_CODE_MAP[settings.bulkPmVariant]) settings.bulkPmVariant = LEGACY_CODE_MAP[settings.bulkPmVariant];
+    if(!settings.bulkAmVariant) settings.bulkAmVariant = "AM_MID";
+    if(!settings.bulkPmVariant) settings.bulkPmVariant = "PM_MID";
+    if(settings.defaultRate === undefined || settings.defaultRate === null) settings.defaultRate = "";
+    if(!settings.userName) settings.userName = "";
+  }
+  let calCursor = new Date(); calCursor.setDate(1);
+  let activeFilter = "all";
+
+  // ===== TAB NAVIGATION =====
+  const fabPanel = document.getElementById("fabPanel");
+  const fabBar = document.getElementById("fabBar");
+  const fabNav = document.getElementById("fabNav");
+  function openFab(){ if(fabPanel) fabPanel.classList.add("open"); }
+  function closeFab(){ if(fabPanel) fabPanel.classList.remove("open"); }
+  if(fabPanel){
+    fabPanel.addEventListener("click", (e)=>{
+      if(!fabPanel.classList.contains("open")){ openFab(); }
+    });
+    fabBar.addEventListener("click", (e)=>{
+      e.stopPropagation();
+      fabPanel.classList.toggle("open");
+    });
+    document.addEventListener("click", (e)=>{
+      if(fabPanel.classList.contains("open") && fabNav && !fabNav.contains(e.target)){
+        closeFab();
+      }
+    });
+  }
+  function switchTab(name){
+    document.querySelectorAll(".tab-panel").forEach(p => p.classList.toggle("active", p.id === "tab-"+name));
+    document.querySelectorAll(".sb-item").forEach(b => b.classList.toggle("active", b.getAttribute("data-tab") === name));
+    document.querySelectorAll(".fab-item").forEach(b => b.classList.toggle("active", b.getAttribute("data-tab") === name));
+    window.scrollTo({top:0, behavior:"instant" in window ? "instant" : "auto"});
+    const host = scrollHost();
+    if(host) host.scrollTop = 0;
+  }
+  document.querySelectorAll(".sb-item").forEach(btn=>{
+    btn.addEventListener("click", ()=> switchTab(btn.getAttribute("data-tab")));
+  });
+  document.querySelectorAll(".fab-item").forEach(btn=>{
+    btn.addEventListener("click", (e)=>{
+      e.stopPropagation();
+      switchTab(btn.getAttribute("data-tab"));
+      closeFab();
+    });
+  });
+
+  function load(key, fallback){
+    try{ const v = JSON.parse(localStorage.getItem(key)); return v || fallback; }catch(e){ return fallback; }
+  }
+  function save(){
+    if(!activeUid) return; // never write to storage before we know which account owns the data
+    localStorage.setItem(storeKeyFor(activeUid), JSON.stringify(shifts));
+    localStorage.setItem(settingsKeyFor(activeUid), JSON.stringify(settings));
+    if(window.__fb) window.__fb.cloudSave({ shifts, settings, updatedAt: Date.now() });
+  }
+
+  // Called once per sign-in, whenever the signed-in uid changes (covers switching accounts
+  // on the same device, not just first load). Wipes any in-memory/rendered data from a
+  // previous account before loading this account's own local cache + cloud copy.
+  window.__onUserChanged = function(uid){
+    activeUid = uid;
+    shifts = load(storeKeyFor(uid), []);
+    settings = load(settingsKeyFor(uid), defaultSettings());
+    normalizeSettings();
+    if(typeof renderAll === "function") renderAll();
+
+    if(window.__fb){
+      window.__fb.cloudLoad().then(cloud => {
+        if(activeUid !== uid) return; // account changed again while this was in flight
+        const isFreshSignup = sessionStorage.getItem("kidzania_fresh_signup") === "1";
+        sessionStorage.removeItem("kidzania_fresh_signup");
+
+        if(isFreshSignup){
+          // New account: always start completely blank, ignore any local cache.
+          shifts = [];
+          settings = defaultSettings();
+          localStorage.setItem(storeKeyFor(uid), JSON.stringify(shifts));
+          localStorage.setItem(settingsKeyFor(uid), JSON.stringify(settings));
+          window.__fb.cloudSave({ shifts, settings, updatedAt: Date.now() });
+          if(typeof renderAll === "function") renderAll();
+          return;
+        }
+
+        if(cloud && Array.isArray(cloud.shifts)){
+          shifts = cloud.shifts;
+          if(cloud.settings) settings = cloud.settings;
+          normalizeSettings();
+          localStorage.setItem(storeKeyFor(uid), JSON.stringify(shifts));
+          localStorage.setItem(settingsKeyFor(uid), JSON.stringify(settings));
+          if(typeof renderAll === "function") renderAll();
+        } else if(shifts.length || settings.establishments.length){
+          // No cloud doc yet, but this account already has its own local cache
+          // (e.g. was used before cloud sync existed) — seed the cloud with it.
+          window.__fb.cloudSave({ shifts, settings, updatedAt: Date.now() });
+        }
+
+        // Now that the initial load is settled, start listening for changes made from
+        // any other device/tab signed into this same account, so this session stays current.
+        if(window.__fb.watchCloud){
+          window.__fb.watchCloud(uid, (remote) => {
+            if(activeUid !== uid) return;
+            if(!remote || !Array.isArray(remote.shifts)) return;
+            shifts = remote.shifts;
+            if(remote.settings) settings = remote.settings;
+            normalizeSettings();
+            localStorage.setItem(storeKeyFor(uid), JSON.stringify(shifts));
+            localStorage.setItem(settingsKeyFor(uid), JSON.stringify(settings));
+            if(typeof renderAll === "function") renderAll();
+          });
+        }
+      }).catch(err => console.error("Cloud load failed:", err));
+    }
+  };
+
+  // Called on sign-out: clear in-memory data immediately so nothing from this
+  // session lingers on screen (or gets written anywhere) once logged out.
+  window.__onUserSignedOut = function(){
+    activeUid = null;
+    shifts = [];
+    settings = defaultSettings();
+    if(window.__fb && window.__fb.stopWatchingCloud) window.__fb.stopWatchingCloud();
+    if(typeof renderAll === "function") renderAll();
+  };
+
+  // Surfaces cloud save state so a permission/network failure is visible instead of
+  // silently swallowed in the console (this is what "data not saved" usually turns out to be).
+  window.__onCloudSyncStateChanged = function(state){
+    const el = document.getElementById("cloudSyncDesc");
+    if(!el) return;
+    if(state === "saving"){
+      el.style.display = ""; el.style.color = "";
+      el.textContent = "Syncing…";
+    } else if(state === "saved"){
+      el.style.display = "";
+      el.style.color = "var(--mint, #2ecc71)";
+      el.textContent = "All changes synced to the cloud.";
+    } else if(state === "error"){
+      el.style.display = "";
+      el.style.color = "var(--coral, #e74c3c)";
+      el.textContent = "⚠ Couldn't sync to the cloud — check your connection. Your changes are only saved on this device until it reconnects.";
+    } else {
+      el.style.display = "none";
+    }
+  };
+
+  function uid(){ return Math.random().toString(36).slice(2,10); }
+
+  function toMinutes(t){
+    const [h,m] = t.split(":").map(Number);
+    return h*60+m;
+  }
+  function hoursBetween(start, end){
+    let s = toMinutes(start), e = toMinutes(end);
+    if(e <= s) e += 24*60; // overnight shift
+    return (e-s)/60;
+  }
+  // A shift only "counts" (money added to totals) once its end time has passed.
+  function shiftEndDateTime(s){
+    const [y,m,d] = s.date.split("-").map(Number);
+    const [sh,sm] = s.start.split(":").map(Number);
+    const startDt = new Date(y, m-1, d, sh, sm);
+    return new Date(startDt.getTime() + (s.hours||0)*3600000);
+  }
+  function isShiftDone(s){
+    return shiftEndDateTime(s).getTime() <= Date.now();
+  }
+  function fmtMoney(n){
+    return settings.currency + Math.round(n).toLocaleString();
+  }
+  function fmtHours(n){
+    return (Math.round(n*10)/10) + "h";
+  }
+  function fmtTime12(t){
+    if(!t) return t;
+    let [h,m] = t.split(":").map(Number);
+    const ap = h >= 12 ? "PM" : "AM";
+    let h12 = h % 12; if(h12 === 0) h12 = 12;
+    return h12 + ":" + String(m).padStart(2,"0") + " " + ap;
+  }
+  function periodOf(s){
+    const h = parseInt((s.start||"0").split(":")[0], 10);
+    return h >= 12 ? "PM" : "AM";
+  }
+  function isWholeDayShift(s){
+    return s && s.start === "10:00" && (s.end === "22:00" || s.end === "23:00");
+  }
+  function isMidShift(s){
+    return s && s.start === "12:30" && s.end === "21:30";
+  }
+  function dateKey(d){
+    return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");
+  }
+  function parseDateFlexible(str){
+    str = str.trim();
+    let m;
+    if(m = str.match(/^(\d{4})-(\d{1,2})-(\d{1,2})$/)){
+      return new Date(+m[1], +m[2]-1, +m[3]);
+    }
+    if(m = str.match(/^(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{2,4})$/)){
+      let day = +m[1], mon = +m[2], yr = +m[3];
+      if(yr < 100) yr += 2000;
+      return new Date(yr, mon-1, day);
+    }
+    let d = new Date(str);
+    if(!isNaN(d.getTime())) return d;
+    return null;
+  }
+  function parseTimeFlexible(str){
+    str = str.trim().toUpperCase().replace(/\s+/g,"");
+    let m = str.match(/^(\d{1,2}):?(\d{2})?(AM|PM)?$/);
+    if(!m) return null;
+    let h = +m[1], min = m[2] ? +m[2] : 0;
+    if(m[3] === "PM" && h < 12) h += 12;
+    if(m[3] === "AM" && h === 12) h = 0;
+    if(h > 23 || min > 59) return null;
+    return String(h).padStart(2,"0")+":"+String(min).padStart(2,"0");
+  }
+
+  // ===== CUSTOM CONFIRM MODAL (replaces window.confirm everywhere) =====
+  const confirmBackdrop = document.getElementById("confirmBackdrop");
+  const confirmSheet = document.getElementById("confirmSheet");
+  const confirmMsg = document.getElementById("confirmMsg");
+  const confirmOkBtn = document.getElementById("confirmOkBtn");
+  const confirmCancelBtn = document.getElementById("confirmCancelBtn");
+  let _confirmHandler = null;
+
+  function confirmAction(message, onConfirm){
+    confirmMsg.textContent = message;
+    _confirmHandler = onConfirm;
+    confirmBackdrop.classList.add("show");
+    confirmSheet.classList.add("show");
+    syncBodyScrollLock();
+  }
+  // This whole script block is wrapped in its own IIFE, so confirmAction is
+  // scoped to that closure and is NOT on window by default. The coordinator
+  // code lives in a separate <script type="module"> block further down and
+  // calls confirmAction directly — that only works if it's exposed globally.
+  window.confirmAction = confirmAction;
+  function closeConfirm(){
+    confirmBackdrop.classList.remove("show");
+    confirmSheet.classList.remove("show");
+    _confirmHandler = null;
+    syncBodyScrollLock();
+  }
+  confirmOkBtn.addEventListener("click", ()=>{
+    const fn = _confirmHandler;
+    closeConfirm();
+    if(fn) fn();
+  });
+  confirmCancelBtn.addEventListener("click", closeConfirm);
+  confirmBackdrop.addEventListener("click", closeConfirm);
+
+  // ===== UNDO SNACKBAR (for single-shift delete) =====
+  const undoSnackbar = document.getElementById("undoSnackbar");
+  const undoSnackbarMsg = document.getElementById("undoSnackbarMsg");
+  const undoSnackbarBtn = document.getElementById("undoSnackbarBtn");
+  let _undoTimer = null;
+  let _undoData = null; // { shift, index }
+
+  function showUndoSnackbar(message, shift, index){
+    if(_undoTimer){ clearTimeout(_undoTimer); _undoTimer = null; }
+    _undoData = { shift, index };
+    undoSnackbarMsg.textContent = message;
+    undoSnackbar.classList.add("show");
+    _undoTimer = setTimeout(()=>{
+      undoSnackbar.classList.remove("show");
+      _undoData = null;
+      _undoTimer = null;
+    }, 5000);
+  }
+  undoSnackbarBtn.addEventListener("click", ()=>{
+    if(_genericUndoFn){
+      clearTimeout(_genericUndoTimer);
+      _genericUndoTimer = null;
+      const fn = _genericUndoFn;
+      _genericUndoFn = null;
+      undoSnackbar.classList.remove("show");
+      fn();
+      return;
+    }
+    if(!_undoData) return;
+    clearTimeout(_undoTimer);
+    _undoTimer = null;
+    const { shift, index } = _undoData;
+    const at = Math.min(index, shifts.length);
+    shifts.splice(at, 0, shift);
+    shifts.sort((a,b)=> a.date.localeCompare(b.date) || a.start.localeCompare(b.start));
+    save();
+    renderAll();
+    undoSnackbar.classList.remove("show");
+    _undoData = null;
+    toast("Shift restored");
+  });
+  function deleteShiftWithUndo(id, label){
+    const index = shifts.findIndex(s => s.id === id);
+    if(index === -1) return;
+    const [removed] = shifts.splice(index, 1);
+    save();
+    renderAll();
+    showUndoSnackbar(label || "Shift removed", removed, index);
+  }
+
+  // ===== GENERIC UNDO (for coordinator-role deletes: team members, establishments, etc.) =====
+  // Reuses the same snackbar as the shift-undo above, but instead of splicing
+  // a shift back in, it just calls back into whatever restore function the
+  // caller (coordinator module) hands it.
+  let _genericUndoTimer = null;
+  let _genericUndoFn = null;
+  function showGenericUndo(message, restoreFn){
+    if(_undoTimer){ clearTimeout(_undoTimer); _undoTimer = null; _undoData = null; }
+    if(_genericUndoTimer){ clearTimeout(_genericUndoTimer); _genericUndoTimer = null; }
+    _genericUndoFn = restoreFn;
+    undoSnackbarMsg.textContent = message;
+    undoSnackbar.classList.add("show");
+    _genericUndoTimer = setTimeout(()=>{
+      undoSnackbar.classList.remove("show");
+      _genericUndoFn = null;
+      _genericUndoTimer = null;
+    }, 5000);
+  }
+  window.showGenericUndo = showGenericUndo;
+
+  function toast(msg){
+    const t = document.getElementById("toast");
+    t.textContent = msg;
+    t.classList.add("show");
+    clearTimeout(t._timer);
+    t._timer = setTimeout(()=> t.classList.remove("show"), 2200);
+  }
+
+  // ===== SHIFT CRUD =====
+  function addShift(shift){
+    shifts.push(Object.assign({ id: uid() }, shift));
+    shifts.sort((a,b)=> a.date.localeCompare(b.date) || a.start.localeCompare(b.start));
+    save();
+    renderAll();
+  }
+  function deleteShift(id){
+    shifts = shifts.filter(s => s.id !== id);
+    save();
+    renderAll();
+  }
+
+  // ===== EDIT ESTABLISHMENT ON AN EXISTING SHIFT =====
+  const estEditBackdrop = document.getElementById("estEditBackdrop");
+  const estEditSheet = document.getElementById("estEditSheet");
+  const estEditInput = document.getElementById("estEditInput");
+  const estEditCancelBtn = document.getElementById("estEditCancelBtn");
+  const estEditSaveBtn = document.getElementById("estEditSaveBtn");
+  let _estEditId = null;
+
+  function openEstEdit(id){
+    const s = shifts.find(x => x.id === id);
+    if(!s) return;
+    _estEditId = id;
+    document.getElementById("estEditDate").textContent = s.date;
+    estEditInput.value = s.establishment || "";
+    const chipsEl = document.getElementById("estEditChips");
+    chipsEl.innerHTML = settings.establishments.length
+      ? settings.establishments.map(e => `<span class="pick-chip" data-est-edit-pick="${escapeHtml(e.name)}">${escapeHtml(e.name)}</span>`).join("")
+      : `<span class="empty-chip-hint">No saved establishments — type one below.</span>`;
+    chipsEl.querySelectorAll("[data-est-edit-pick]").forEach(c=>{
+      c.addEventListener("click", ()=>{ estEditInput.value = c.getAttribute("data-est-edit-pick"); });
+    });
+    estEditBackdrop.classList.add("show");
+    estEditSheet.classList.add("show");
+    syncBodyScrollLock();
+  }
+  function closeEstEdit(){
+    estEditBackdrop.classList.remove("show");
+    estEditSheet.classList.remove("show");
+    _estEditId = null;
+    syncBodyScrollLock();
+  }
+  estEditCancelBtn.addEventListener("click", closeEstEdit);
+  estEditBackdrop.addEventListener("click", closeEstEdit);
+  estEditSaveBtn.addEventListener("click", ()=>{
+    if(!_estEditId) return;
+    const s = shifts.find(x => x.id === _estEditId);
+    if(s){
+      s.establishment = estEditInput.value.trim();
+      save();
+      renderAll();
+      toast("Establishment updated");
+    }
+    closeEstEdit();
+  });
+
+  // ===== FORM: single add =====
+  const fDate = document.getElementById("fDate");
+  const fEst = document.getElementById("fEst");
+  const fNotes = document.getElementById("fNotes");
+
+  (function initForm(){
+    fDate.value = dateKey(new Date());
+    fEst.value = settings.defaultEst || "";
+  })();
+  fDate.addEventListener("change", renderShiftTypePick);
+
+  // ---- Establishments: add / delete / pick ----
+  const newEstName = document.getElementById("newEstName");
+
+  document.getElementById("addEstBtn").addEventListener("click", function(){
+    const name = newEstName.value.trim();
+    if(!name){ toast("Give it a name first"); return; }
+    settings.establishments.push({ id: uid(), name: name });
+    save();
+    newEstName.value = "";
+    renderEstablishmentUI();
+    toast(name + " added");
+  });
+
+  function deleteEstablishment(id){
+    settings.establishments = settings.establishments.filter(e => e.id !== id);
+    save();
+    renderEstablishmentUI();
+  }
+
+  function pickEstablishment(est){
+    fEst.value = est.name;
+    renderEstablishmentUI();
+  }
+
+  function renderEstablishmentUI(){
+    const list = settings.establishments;
+
+    // management chips (with delete)
+    const manageEl = document.getElementById("estChipManage");
+    manageEl.innerHTML = list.length ? list.map(e => `
+      <span class="manage-chip">${escapeHtml(e.name)}
+        <button class="mc-del" data-est-del="${e.id}" title="Remove"><svg class="icon"><use href="#ic-x"/></svg></button>
+      </span>
+    `).join("") : `<span class="empty-chip-hint">No establishments saved yet — add one below.</span>`;
+    manageEl.querySelectorAll("[data-est-del]").forEach(b=>{
+      b.addEventListener("click", ()=>{
+        confirmAction("Remove this establishment? This won't delete shifts already logged under it.", ()=> deleteEstablishment(b.getAttribute("data-est-del")));
+      });
+    });
+
+    // pick chips (in the shift form)
+    const pickEl = document.getElementById("estChipPick");
+    pickEl.innerHTML = list.length ? list.map(e => `
+      <span class="pick-chip ${fEst.value === e.name ? 'selected':''}" data-est-pick="${e.id}">${escapeHtml(e.name)}</span>
+    `).join("") : `<span class="empty-chip-hint">Add an establishment above to tap-select it here.</span>`;
+    pickEl.querySelectorAll("[data-est-pick]").forEach(chip=>{
+      chip.addEventListener("click", ()=>{
+        const est = list.find(e => e.id === chip.getAttribute("data-est-pick"));
+        if(est) pickEstablishment(est);
+      });
+    });
+  }
+
+  // ---- Shift type picker (fixed options, weekday vs Fri/Sat weekend clock) ----
+  let selectedShiftType = SHIFT_TYPES_WEEKDAY[0].code;
+
+  function renderShiftTypePick(){
+    const el = document.getElementById("shiftTypePick");
+    const weekend = isWeekendDate(fDate.value);
+    const types = shiftTypesFor(weekend);
+    el.innerHTML = types.map(t => `
+      <span class="pick-chip ${selectedShiftType === t.code ? 'selected':''}" data-shift-type="${t.code}">${t.label}</span>
+    `).join("");
+    el.querySelectorAll("[data-shift-type]").forEach(chip=>{
+      chip.addEventListener("click", ()=>{
+        selectedShiftType = chip.getAttribute("data-shift-type");
+        renderShiftTypePick();
+      });
+    });
+  }
+
+  fEst.addEventListener("input", renderEstablishmentUI);
+
+  document.getElementById("addShiftBtn").addEventListener("click", function(){
+    if(!fDate.value){
+      toast("Pick a date first");
+      return;
+    }
+    const type = shiftTypeByCode(selectedShiftType, isWeekendDate(fDate.value));
+    const rate = parseFloat(settings.defaultRate) || 0;
+    const est = fEst.value.trim();
+    settings.defaultEst = est;
+    addShift({
+      date: fDate.value, start: type.start, end: type.end,
+      establishment: est, rate: rate, hours: type.hours, pay: calcPay(type.hours, rate),
+      notes: fNotes.value.trim()
+    });
+    fNotes.value = "";
+    toast("Shift stamped!");
+    switchTab("overview");
+  });
+
+  // ===== BULK IMPORT =====
+  const bulkInput = document.getElementById("bulkInput");
+  const importPreview = document.getElementById("importPreview");
+  const confirmBtn = document.getElementById("confirmImportBtn");
+  const amVariant = document.getElementById("amVariant");
+  const pmVariant = document.getElementById("pmVariant");
+  let bulkRateHint = document.getElementById("bulkRateHint");
+  const wholeMonthStart = document.getElementById("wholeMonthStart");
+  let pendingImport = [];
+
+  (function initWholeMonth(){
+    const now = new Date();
+    wholeMonthStart.value = dateKey(new Date(now.getFullYear(), now.getMonth(), 1));
+  })();
+
+  (function initBulkCodes(){
+    amVariant.value = settings.bulkAmVariant;
+    pmVariant.value = settings.bulkPmVariant;
+    bulkRateHint.textContent = fmtMoney(settings.defaultRate) + "/hr";
+  })();
+
+  amVariant.addEventListener("change", ()=>{ settings.bulkAmVariant = amVariant.value; save(); });
+  pmVariant.addEventListener("change", ()=>{ settings.bulkPmVariant = pmVariant.value; save(); });
+
+  function parseBulk(text){
+    const rate = parseFloat(settings.defaultRate) || 50;
+    const defEst = "";
+    const amCode = amVariant.value || settings.bulkAmVariant;
+    const pmCode = pmVariant.value || settings.bulkPmVariant;
+
+    // ===== SEQUENCE MODE (only mode) =====
+    // A single space/newline-separated run of AM/PM/FULL/OFF codes with no dates,
+    // e.g. "PM OFF AM AM PM OFF OFF AM ...", starting from a chosen date.
+    if(!wholeMonthStart.value){
+      return [{ raw: text.trim(), ok:false, reason:"pick the first day of the sequence above" }];
+    }
+    const [sy, sm, sd] = wholeMonthStart.value.split("-").map(Number);
+    const tokens = text.split(/\s+/).map(t=>t.trim()).filter(Boolean);
+    const rows = [];
+    tokens.forEach((tok, i)=>{
+      const code = tok.toUpperCase().replace(/[^A-Z]/g,"");
+      const dt = new Date(sy, sm-1, sd + i);
+      const dk = dateKey(dt);
+      const weekend = isWeekendDate(dk);
+      if(code === "OFF" || code === "OFFDAY" || code === "O"){
+        rows.push({ raw: tok, ok:true, off:true, date: dk });
+        return;
+      }
+      if(code === "AM" || code === "PM" || code === "FULL" || code === "WHOLE" || code === "F"){
+        const type = code === "AM" ? shiftTypeByCode(amCode, weekend)
+                   : code === "PM" ? shiftTypeByCode(pmCode, weekend)
+                   : shiftTypeByCode("WHOLE", weekend);
+        rows.push({
+          raw: tok, ok:true, off:false,
+          date: dk, start: type.start, end: type.end, establishment: defEst,
+          rate: rate, hours: type.hours, pay: calcPay(type.hours, rate)
+        });
+        return;
+      }
+      rows.push({ raw: tok, ok:false, reason:`"${tok}" — expected AM, PM, FULL, or OFF` });
+    });
+    return rows;
+  }
+
+  document.getElementById("previewBtn").addEventListener("click", function(){
+    const text = bulkInput.value;
+    if(!text.trim()){ toast("Paste some shifts first"); return; }
+    pendingImport = parseBulk(text);
+    renderImportPreview();
+  });
+
+  function renderImportPreview(){
+    if(pendingImport.length === 0){
+      importPreview.innerHTML = "";
+      confirmBtn.style.display = "none";
+      return;
+    }
+    let html = '<div class="import-preview"><div class="import-row head"><div>Date</div><div>Time</div><div>Establishment</div><div><svg class="icon"><use href="#ic-check"/></svg></div></div>';
+    let okCount = 0, offCount = 0;
+    for(const r of pendingImport){
+      if(r.ok && r.off){
+        offCount++;
+        html += `<div class="import-row off"><div>${r.date}</div><div>Day off</div><div>—</div><div><svg class="icon"><use href="#ic-moon-off"/></svg></div></div>`;
+      }else if(r.ok){
+        okCount++;
+        const estCell = r.establishment ? escapeHtml(r.establishment) : `<span class="est-missing">unset</span>`;
+        html += `<div class="import-row"><div>${r.date}</div><div>${fmtTime12(r.start)}–${fmtTime12(r.end)} (${fmtHours(r.hours)})</div><div>${estCell}</div><div><svg class="icon"><use href="#ic-check"/></svg></div></div>`;
+      }else{
+        html += `<div class="import-row bad"><div style="grid-column:1/4;">${escapeHtml(r.raw)} — ${r.reason}</div><div><svg class="icon"><use href="#ic-warning"/></svg></div></div>`;
+      }
+    }
+    html += "</div>";
+    const unsetCount = pendingImport.filter(r=>r.ok && !r.off && !r.establishment).length;
+    if(unsetCount > 0){
+      html += `<div class="hint"><svg class="icon icon-inline"><use href="#ic-tag"/></svg>${unsetCount} shift${unsetCount===1?"":"s"} will be added without an establishment — you can set it later from a shift's tag button in the Log tab.</div>`;
+    }
+    importPreview.innerHTML = html;
+    confirmBtn.style.display = okCount > 0 ? "inline-flex" : "none";
+    confirmBtn.textContent = offCount > 0
+      ? `Confirm & add ${okCount} shift${okCount===1?"":"s"} (${offCount} off day${offCount===1?"":"s"} skipped)`
+      : `Confirm & add to passport`;
+  }
+
+  confirmBtn.addEventListener("click", function(){
+    const good = pendingImport.filter(r=>r.ok && !r.off);
+    for(const r of good){
+      shifts.push({ id: uid(), date:r.date, start:r.start, end:r.end, establishment:r.establishment, rate:r.rate, hours:r.hours, pay:r.pay });
+    }
+    shifts.sort((a,b)=> a.date.localeCompare(b.date) || a.start.localeCompare(b.start));
+    save();
+    pendingImport = [];
+    importPreview.innerHTML = "";
+    confirmBtn.style.display = "none";
+    bulkInput.value = "";
+    renderAll();
+    toast(`${good.length} shifts added to your passport!`);
+    switchTab("overview");
+  });
+
+  function escapeHtml(s){
+    return String(s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+  }
+
+  // ===== CALENDAR =====
+  const calGrid = document.getElementById("calGrid");
+  const weekGrid = document.getElementById("weekGrid");
+  const calDow = document.getElementById("calDow");
+  const calMonthLabel = document.getElementById("calMonthLabel");
+  let calView = "month"; // "month" | "week"
+
+  function startOfWeek(d){
+    const dt = new Date(d);
+    dt.setDate(dt.getDate() - dt.getDay());
+    dt.setHours(0,0,0,0);
+    return dt;
+  }
+
+  function shiftsByDate(){
+    const map = {};
+    for(const s of shifts){
+      (map[s.date] = map[s.date] || []).push(s);
+    }
+    return map;
+  }
+
+  window.__renderCalendar = function(){ renderCalendar(); };
+  function renderCalendar(){
+    if(calView === "week"){ renderWeek(); return; }
+    calGrid.style.display = "";
+    weekGrid.style.display = "none";
+    calDow.style.display = "";
+    const map = shiftsByDate();
+    const year = calCursor.getFullYear(), month = calCursor.getMonth();
+    calMonthLabel.textContent = calCursor.toLocaleString('default', { month:'long', year:'numeric' });
+    const firstDow = new Date(year, month, 1).getDay();
+    const daysInMonth = new Date(year, month+1, 0).getDate();
+    const todayKey = dateKey(new Date());
+
+    let html = "";
+    for(let i=0;i<firstDow;i++) html += '<div class="day pad"></div>';
+    for(let d=1; d<=daysInMonth; d++){
+      const dt = new Date(year, month, d);
+      const key = dateKey(dt);
+      const dayShifts = map[key];
+      const isToday = key === todayKey;
+      const cls = ["day"];
+      if(isToday) cls.push("today");
+
+      // Assigned shift (staff-side, from coordinator schedule) for this date
+      const assignedShifts = (typeof window.__getAssignedShifts === "function") ? window.__getAssignedShifts() : {};
+      const assigned = assignedShifts[key];
+      const hasLogged = dayShifts && dayShifts.length;
+      const hasAssignedWork = assigned && assigned.slot && assigned.slot !== "OFF";
+      const hasAssignedOff = assigned && assigned.slot === "OFF";
+
+      let estTag = "";
+      let stampLabel = "";
+      let coordPin = "";
+
+      if(hasLogged){
+        // Self-logged shifts take priority in display
+        cls.push("has-shift");
+        const periods = Array.from(new Set(dayShifts.map(periodOf)));
+        const hasWhole = dayShifts.some(isWholeDayShift);
+        const isMidOnly = !hasWhole && periods.length === 1 && dayShifts.length === 1 && isMidShift(dayShifts[0]);
+        if(hasWhole || periods.length > 1){ cls.push("period-both"); stampLabel = hasWhole ? "Whole day" : "AM + PM"; }
+        else if(isMidOnly){ cls.push("period-mid"); stampLabel = "Mid"; }
+        else if(periods[0] === "AM"){ cls.push("period-am"); stampLabel = "AM"; }
+        else if(periods[0] === "PM"){ cls.push("period-pm"); stampLabel = "PM"; }
+        const ests = Array.from(new Set(dayShifts.map(s=>s.establishment).filter(Boolean)));
+        if(ests.length) estTag = `<span class="est-tag" title="${escapeHtml(ests.join(', '))}">${escapeHtml(ests.join(', '))}</span>`;
+      } else if(hasAssignedWork){
+        // No self-logged shift — render the coordinator-assigned shift using
+        // the exact same colored styling as a normal logged shift.
+        cls.push("has-shift", "is-coord-assigned");
+        if(assigned.slot === "AM"){ cls.push("period-am"); stampLabel = "AM"; }
+        else if(assigned.slot === "PM"){ cls.push("period-pm"); stampLabel = "PM"; }
+        else { cls.push("period-both"); stampLabel = assigned.slot; }
+        if(assigned.establishment) estTag = `<span class="est-tag" title="${escapeHtml(assigned.establishment)}">${escapeHtml(assigned.establishment)}</span>`;
+        coordPin = `<span class="coord-pin" title="Assigned by coordinator — cannot be edited">C</span>`;
+      } else if(hasAssignedOff){
+        cls.push("off-day", "is-coord-assigned");
+        estTag = `<span class="est-tag" style="opacity:.7;">OFF</span>`;
+        coordPin = `<span class="coord-pin" title="Assigned by coordinator — cannot be edited">C</span>`;
+      } else {
+        cls.push("off-day");
+      }
+
+      html += `<div class="${cls.join(' ')}" data-date="${key}">
+        <span class="dnum">${d}</span>
+        ${estTag}
+        ${stampLabel ? `<span class="stamp">${stampLabel}</span>` : ""}
+        ${coordPin}
+      </div>`;
+    }
+    calGrid.innerHTML = html;
+
+    calGrid.querySelectorAll(".day.has-shift:not(.is-coord-assigned)").forEach(el=>{
+      el.addEventListener("click", ()=>{
+        const key = el.getAttribute("data-date");
+        openDaySheet(key, map[key]);
+      });
+    });
+    calGrid.querySelectorAll(".day.off-day:not(.is-coord-assigned)").forEach(el=>{
+      el.addEventListener("click", ()=>{
+        const key = el.getAttribute("data-date");
+        openAddShiftForDate(key);
+      });
+    });
+    // Coordinator-assigned days (worked or off) open the read-only assigned-shift sheet
+    calGrid.querySelectorAll(".day.is-coord-assigned").forEach(el=>{
+      el.addEventListener("click", ()=>{
+        const key = el.getAttribute("data-date");
+        if(typeof window.__openAssignedShift === "function") window.__openAssignedShift(key);
+      });
+    });
+  }
+
+  function renderWeek(){
+    calGrid.style.display = "none";
+    weekGrid.style.display = "";
+    calDow.style.display = "none";
+
+    const map = shiftsByDate();
+    const weekStart = startOfWeek(calCursor);
+    const weekEnd = new Date(weekStart); weekEnd.setDate(weekEnd.getDate()+6);
+    const sameMonth = weekStart.getMonth() === weekEnd.getMonth();
+    const label = sameMonth
+      ? `${weekStart.toLocaleString('default',{month:'short'})} ${weekStart.getDate()}–${weekEnd.getDate()}, ${weekEnd.getFullYear()}`
+      : `${weekStart.toLocaleString('default',{month:'short'})} ${weekStart.getDate()} – ${weekEnd.toLocaleString('default',{month:'short'})} ${weekEnd.getDate()}, ${weekEnd.getFullYear()}`;
+    calMonthLabel.textContent = label;
+
+    const todayKey = dateKey(new Date());
+    let html = "";
+    for(let i=0;i<7;i++){
+      const dt = new Date(weekStart); dt.setDate(dt.getDate()+i);
+      const key = dateKey(dt);
+      const dayShifts = map[key];
+      const isToday = key === todayKey;
+      const cls = ["week-row"];
+      if(isToday) cls.push("today");
+
+      const assignedShifts = (typeof window.__getAssignedShifts === "function") ? window.__getAssignedShifts() : {};
+      const assigned = assignedShifts[key];
+      const hasLogged = dayShifts && dayShifts.length;
+      const hasAssignedWork = assigned && assigned.slot && assigned.slot !== "OFF";
+      const hasAssignedOff = assigned && assigned.slot === "OFF";
+
+      let periodsLabel = "";
+      let estText = "Off";
+      let coordBadge = "";
+
+      if(hasLogged){
+        cls.push("has-shift");
+        const periods = Array.from(new Set(dayShifts.map(periodOf)));
+        const hasWhole = dayShifts.some(isWholeDayShift);
+        const isMidOnly = !hasWhole && periods.length === 1 && dayShifts.length === 1 && isMidShift(dayShifts[0]);
+        if(hasWhole || periods.length > 1) cls.push("period-both");
+        else if(isMidOnly) cls.push("period-mid");
+        else if(periods[0] === "AM") cls.push("period-am");
+        else if(periods[0] === "PM") cls.push("period-pm");
+        periodsLabel = hasWhole ? "Whole day" : (isMidOnly ? "Mid" : periods.join(' + '));
+        const ests = Array.from(new Set(dayShifts.map(s=>s.establishment).filter(Boolean)));
+        estText = ests.length ? escapeHtml(ests.join(', ')) : '<span style="opacity:.6;">No establishment set</span>';
+      } else if(hasAssignedWork){
+        cls.push("has-shift", "is-coord-assigned");
+        if(assigned.slot === "AM") cls.push("period-am");
+        else if(assigned.slot === "PM") cls.push("period-pm");
+        else cls.push("period-both");
+        periodsLabel = assigned.slot;
+        estText = assigned.establishment ? escapeHtml(assigned.establishment) : '<span style="opacity:.6;">No establishment set</span>';
+        coordBadge = `<span class="wr-coord-badge" title="Assigned by coordinator — cannot be edited">✦ Coordinator</span>`;
+      } else if(hasAssignedOff){
+        cls.push("off-day", "is-coord-assigned");
+        estText = 'OFF (assigned)';
+        coordBadge = `<span class="wr-coord-badge" title="Assigned by coordinator — cannot be edited">✦ Coordinator</span>`;
+      } else {
+        cls.push("off-day");
+      }
+
+      html += `<div class="${cls.join(' ')}" data-date="${key}">
+        <div class="wr-date"><span class="wr-dow">${dt.toLocaleString('default',{weekday:'short'})}</span><span class="wr-dnum">${dt.getDate()}</span></div>
+        <div class="wr-body"><div class="wr-est">${estText}</div></div>
+        ${periodsLabel ? `<span class="wr-stamp">${periodsLabel}</span>` : ""}
+        ${coordBadge}
+      </div>`;
+    }
+    weekGrid.innerHTML = html;
+
+    weekGrid.querySelectorAll(".week-row.has-shift:not(.is-coord-assigned)").forEach(el=>{
+      el.addEventListener("click", ()=>{
+        const key = el.getAttribute("data-date");
+        openDaySheet(key, map[key]);
+      });
+    });
+    weekGrid.querySelectorAll(".week-row.off-day:not(.is-coord-assigned)").forEach(el=>{
+      el.addEventListener("click", ()=>{
+        const key = el.getAttribute("data-date");
+        openAddShiftForDate(key);
+      });
+    });
+    weekGrid.querySelectorAll(".week-row.is-coord-assigned").forEach(el=>{
+      el.addEventListener("click", ()=>{
+        const key = el.getAttribute("data-date");
+        if(typeof window.__openAssignedShift === "function") window.__openAssignedShift(key);
+      });
+    });
+  }
+
+  function openAddShiftForDate(key){
+    switchTab("log");
+    fDate.value = key;
+    renderShiftTypePick();
+    renderEstablishmentUI();
+    const logPanel = fDate.closest(".panel");
+    if(logPanel) logPanel.scrollIntoView({ behavior:"smooth", block:"start" });
+    toast("Pick a shift type & establishment below");
+  }
+
+  // ===== DAY DETAIL SHEET =====
+  const sheetBackdrop = document.getElementById("sheetBackdrop");
+  const daySheet = document.getElementById("daySheet");
+  const sheetTitle = document.getElementById("sheetTitle");
+  const sheetBody = document.getElementById("sheetBody");
+  let _lastDaySheetKey = null;
+
+  function openDaySheet(key, list){
+    const [y,m,d] = key.split("-").map(Number);
+    const nice = new Date(y, m-1, d).toLocaleDateString('default', { weekday:'long', day:'numeric', month:'long' });
+    sheetTitle.textContent = nice;
+    _lastDaySheetKey = key;
+    sheetBody.innerHTML = list.map(s => `
+      <div class="sheet-item" style="flex-direction:column; align-items:stretch; gap:8px;">
+        <div style="display:flex; align-items:center; gap:10px; cursor:pointer;" data-shift-id="${s.id}">
+          <div class="si-l">
+            <div class="est">${s.establishment ? escapeHtml(s.establishment) : '<span class="est-missing">No establishment set</span>'}</div>
+            <div class="time">${fmtTime12(s.start)}–${fmtTime12(s.end)} · ${fmtHours(s.hours)}</div>
+            ${s.notes ? `<div class="shift-note"><svg class="icon icon-inline"><use href="#ic-note"/></svg>${escapeHtml(s.notes)}</div>` : ""}
+          </div>
+          <div class="si-r" style="margin-left:auto;">${fmtMoney(s.pay)}</div>
+        </div>
+        <div style="display:flex; align-items:center; justify-content:space-between; gap:8px; padding-top:6px; border-top:1px dashed var(--line);">
+          <span style="font-size:12px; font-weight:700; color:${s.expense ? 'var(--coral)' : 'var(--mut-50)'};">
+            ${s.expense ? `Expense: ${fmtMoney(s.expense)}${s.expenseNote ? ` · ${escapeHtml(s.expenseNote)}` : ""}` : "No expense logged"}
+          </span>
+          <button class="btn btn-ghost" data-expense-shift-id="${s.id}" style="padding:6px 12px; font-size:12px;">${s.expense ? "Edit expense" : "Add expense"}</button>
+        </div>
+      </div>
+    `).join("");
+    sheetBody.querySelectorAll("[data-shift-id]").forEach(el=>{
+      el.addEventListener("click", ()=> openShiftEdit(el.getAttribute("data-shift-id")));
+    });
+    sheetBody.querySelectorAll("[data-expense-shift-id]").forEach(el=>{
+      el.addEventListener("click", (e)=>{ e.stopPropagation(); openExpenseEdit(el.getAttribute("data-expense-shift-id")); });
+    });
+    sheetBackdrop.classList.add("show");
+    daySheet.classList.add("show");
+    syncBodyScrollLock();
+  }
+  function closeDaySheet(){
+    sheetBackdrop.classList.remove("show");
+    daySheet.classList.remove("show");
+    syncBodyScrollLock();
+  }
+  sheetBackdrop.addEventListener("click", closeDaySheet);
+  document.getElementById("sheetClose").addEventListener("click", closeDaySheet);
+
+  // ===== ADD/EDIT SHIFT EXPENSE =====
+  const expenseEditBackdrop = document.getElementById("expenseEditBackdrop");
+  const expenseEditSheet = document.getElementById("expenseEditSheet");
+  const expenseEditDate = document.getElementById("expenseEditDate");
+  const expenseEditInput = document.getElementById("expenseEditInput");
+  const expenseEditNoteInput = document.getElementById("expenseEditNoteInput");
+  const expenseEditSaveBtn = document.getElementById("expenseEditSaveBtn");
+  const expenseEditCancelBtn = document.getElementById("expenseEditCancelBtn");
+  const expenseEditClearBtn = document.getElementById("expenseEditClearBtn");
+  let _expenseEditId = null;
+
+  function openExpenseEdit(id){
+    const s = shifts.find(x => x.id === id);
+    if(!s) return;
+    _expenseEditId = id;
+    const [y,m,d] = s.date.split("-").map(Number);
+    expenseEditDate.textContent = new Date(y, m-1, d).toLocaleDateString('default', { weekday:'long', day:'numeric', month:'long' });
+    expenseEditInput.value = s.expense ? s.expense : "";
+    expenseEditNoteInput.value = s.expenseNote || "";
+    daySheet.classList.remove("show");
+    expenseEditBackdrop.classList.add("show");
+    expenseEditSheet.classList.add("show");
+    syncBodyScrollLock();
+  }
+  function closeExpenseEdit(reopenDaySheet){
+    expenseEditBackdrop.classList.remove("show");
+    expenseEditSheet.classList.remove("show");
+    _expenseEditId = null;
+    if(reopenDaySheet && _lastDaySheetKey){
+      const map = shiftsByDate();
+      const list = map[_lastDaySheetKey];
+      if(list && list.length) openDaySheet(_lastDaySheetKey, list);
+      else closeDaySheet();
+    }
+    syncBodyScrollLock();
+  }
+  expenseEditCancelBtn.addEventListener("click", ()=> closeExpenseEdit(true));
+  expenseEditBackdrop.addEventListener("click", ()=> closeExpenseEdit(true));
+  expenseEditSaveBtn.addEventListener("click", ()=>{
+    const s = shifts.find(x => x.id === _expenseEditId);
+    if(!s) return;
+    const val = parseFloat(expenseEditInput.value);
+    if(!isNaN(val) && val > 0){
+      s.expense = val;
+      const note = expenseEditNoteInput.value.trim();
+      if(note) s.expenseNote = note; else delete s.expenseNote;
+    } else {
+      delete s.expense;
+      delete s.expenseNote;
+    }
+    save();
+    renderAll();
+    toast("Expense saved");
+    closeExpenseEdit(true);
+  });
+  expenseEditClearBtn.addEventListener("click", ()=>{
+    const s = shifts.find(x => x.id === _expenseEditId);
+    if(s){ delete s.expense; delete s.expenseNote; save(); renderAll(); toast("Expense cleared"); }
+    closeExpenseEdit(true);
+  });
+
+  // ===== EDIT SHIFT MODAL =====
+  const shiftEditBackdrop = document.getElementById("shiftEditBackdrop");
+  const shiftEditSheet = document.getElementById("shiftEditSheet");
+  const shiftEditDate = document.getElementById("shiftEditDate");
+  const shiftEditEstChips = document.getElementById("shiftEditEstChips");
+  const shiftEditEstInput = document.getElementById("shiftEditEstInput");
+  const shiftEditSaveBtn = document.getElementById("shiftEditSaveBtn");
+  const shiftEditCancelBtn = document.getElementById("shiftEditCancelBtn");
+  const shiftEditDeleteBtn = document.getElementById("shiftEditDeleteBtn");
+  let _shiftEditId = null;
+  let _shiftEditType = null;
+
+  function renderShiftEditTypePick(weekend){
+    const el = document.getElementById("shiftEditTypePick");
+    const types = shiftTypesFor(!!weekend);
+    el.innerHTML = types.map(t => `
+      <span class="pick-chip ${_shiftEditType === t.code ? 'selected':''}" data-shift-edit-type="${t.code}">${t.label}</span>
+    `).join("");
+    el.querySelectorAll(".pick-chip").forEach(chip=>{
+      chip.addEventListener("click", ()=>{
+        _shiftEditType = chip.getAttribute("data-shift-edit-type");
+        renderShiftEditTypePick(weekend);
+      });
+    });
+  }
+
+  function openShiftEdit(id){
+    const s = shifts.find(x => x.id === id);
+    if(!s) return;
+    _shiftEditId = id;
+    const [y,m,d] = s.date.split("-").map(Number);
+    shiftEditDate.textContent = new Date(y, m-1, d).toLocaleDateString('default', { weekday:'long', day:'numeric', month:'long' });
+
+    // figure out which fixed shift type (if any) this shift currently matches (weekday or weekend clock)
+    const weekend = isWeekendDate(s.date);
+    const match = SHIFT_TYPES_ALL.find(t => t.start === s.start && t.end === s.end);
+    // If the shift's times don't match a known preset (e.g. a custom time), leave
+    // the type unselected instead of silently defaulting to the first preset —
+    // otherwise saving without touching the type picker would overwrite the
+    // shift's original times with that default preset's times.
+    _shiftEditType = match ? match.code : null;
+    renderShiftEditTypePick(weekend);
+
+    shiftEditEstInput.value = s.establishment || "";
+    document.getElementById("shiftEditNotesInput").value = s.notes || "";
+    shiftEditEstChips.innerHTML = settings.establishments.length
+      ? settings.establishments.map(e => `<span class="pick-chip" data-shift-edit-est-pick="${escapeHtml(e.name)}">${escapeHtml(e.name)}</span>`).join("")
+      : `<span class="empty-chip-hint">No saved establishments — type one below.</span>`;
+    shiftEditEstChips.querySelectorAll("[data-shift-edit-est-pick]").forEach(c=>{
+      c.addEventListener("click", ()=>{ shiftEditEstInput.value = c.getAttribute("data-shift-edit-est-pick"); });
+    });
+
+    daySheet.classList.remove("show");
+    shiftEditBackdrop.classList.add("show");
+    shiftEditSheet.classList.add("show");
+    syncBodyScrollLock();
+  }
+
+  function closeShiftEdit(reopenDaySheet){
+    shiftEditBackdrop.classList.remove("show");
+    shiftEditSheet.classList.remove("show");
+    _shiftEditId = null;
+    if(reopenDaySheet && _lastDaySheetKey){
+      const map = shiftsByDate();
+      const list = map[_lastDaySheetKey];
+      if(list && list.length) openDaySheet(_lastDaySheetKey, list);
+      else closeDaySheet();
+    } else if(!reopenDaySheet){
+      sheetBackdrop.classList.remove("show");
+      daySheet.classList.remove("show");
+    }
+    syncBodyScrollLock();
+  }
+
+  shiftEditCancelBtn.addEventListener("click", ()=> closeShiftEdit(true));
+  shiftEditBackdrop.addEventListener("click", ()=> closeShiftEdit(true));
+
+  shiftEditSaveBtn.addEventListener("click", ()=>{
+    if(!_shiftEditId) return;
+    const s = shifts.find(x => x.id === _shiftEditId);
+    if(!s) return;
+    const type = shiftTypeByCode(_shiftEditType, isWeekendDate(s.date));
+    if(type){
+      s.start = type.start;
+      s.end = type.end;
+      s.hours = type.hours;
+      s.pay = calcPay(type.hours, s.rate || parseFloat(settings.defaultRate) || 0);
+    }
+    s.establishment = shiftEditEstInput.value.trim();
+    s.notes = document.getElementById("shiftEditNotesInput").value.trim();
+    shifts.sort((a,b)=> a.date.localeCompare(b.date) || a.start.localeCompare(b.start));
+    save();
+    renderAll();
+    toast("Shift updated");
+    closeShiftEdit(true);
+  });
+
+  shiftEditDeleteBtn.addEventListener("click", ()=>{
+    if(!_shiftEditId) return;
+    const id = _shiftEditId;
+    deleteShiftWithUndo(id, "Shift removed");
+    closeShiftEdit(false);
+  });
+
+  document.getElementById("prevMonth").addEventListener("click", ()=>{
+    if(calView === "week") calCursor.setDate(calCursor.getDate()-7);
+    else calCursor.setMonth(calCursor.getMonth()-1);
+    renderCalendar();
+  });
+  document.getElementById("nextMonth").addEventListener("click", ()=>{
+    if(calView === "week") calCursor.setDate(calCursor.getDate()+7);
+    else calCursor.setMonth(calCursor.getMonth()+1);
+    renderCalendar();
+  });
+  document.getElementById("todayBtn").addEventListener("click", ()=>{
+    calCursor = new Date();
+    if(calView === "month") calCursor.setDate(1);
+    renderCalendar();
+  });
+  document.getElementById("monthViewBtn").addEventListener("click", ()=>{
+    if(calView === "month") return;
+    calView = "month";
+    calCursor.setDate(1);
+    document.getElementById("monthViewBtn").classList.add("active");
+    document.getElementById("weekViewBtn").classList.remove("active");
+    renderCalendar();
+  });
+  document.getElementById("weekViewBtn").addEventListener("click", ()=>{
+    if(calView === "week") return;
+    calView = "week";
+    calCursor = new Date();
+    document.getElementById("weekViewBtn").classList.add("active");
+    document.getElementById("monthViewBtn").classList.remove("active");
+    renderCalendar();
+  });
+
+  // ===== STATS / HERO =====
+  // Pay period runs the 20th of one month through the 20th of the next
+  // (both the 20th that starts it and the 20th that ends it are included).
+  function currentPayPeriodRange(now){
+    const y = now.getFullYear(), m = now.getMonth(), d = now.getDate();
+    const start = d > 20 ? new Date(y, m, 20) : new Date(y, m-1, 20);
+    const end = new Date(start.getFullYear(), start.getMonth()+1, 21); // exclusive, so day 20 is included
+    return { start, end };
+  }
+  function renderStats(){
+    const now = new Date();
+    const { start: periodStart, end: periodEnd } = currentPayPeriodRange(now);
+    const periodStartKey = dateKey(periodStart);
+    const periodEndKey = dateKey(periodEnd);
+    const monthShifts = shifts.filter(s => s.date >= periodStartKey && s.date < periodEndKey);
+    const monthDone = monthShifts.filter(isShiftDone);
+    const monthTotal = monthDone.reduce((a,s)=>a+s.pay,0);
+    const monthHours = monthDone.reduce((a,s)=>a+s.hours,0);
+    const allTotal = shifts.filter(isShiftDone).reduce((a,s)=>a+s.pay,0);
+
+    document.getElementById("statMonthTotal").textContent = fmtMoney(monthTotal);
+    document.getElementById("statAllTotal").textContent = fmtMoney(allTotal);
+    document.getElementById("statMonthHours").textContent = fmtHours(monthHours);
+    document.getElementById("statShiftCount").textContent = shifts.length;
+
+    // busiest establishment & most common shift type this month
+    const busiestEstEl = document.getElementById("statBusiestEst");
+    const commonShiftEl = document.getElementById("statCommonShift");
+    if(monthShifts.length === 0){
+      busiestEstEl.textContent = "—";
+      commonShiftEl.textContent = "—";
+    } else {
+      const estCounts = {};
+      monthShifts.forEach(s=>{
+        if(s.establishment) estCounts[s.establishment] = (estCounts[s.establishment]||0) + 1;
+      });
+      const estEntries = Object.entries(estCounts).sort((a,b)=> b[1]-a[1]);
+      busiestEstEl.textContent = estEntries.length ? `${estEntries[0][0]} (${estEntries[0][1]})` : "—";
+
+      const typeCounts = {};
+      monthShifts.forEach(s=>{
+        const match = SHIFT_TYPES_ALL.find(t => t.start === s.start && t.end === s.end);
+        const key = match ? `${match.period} · ${match.hours}h` : `${periodOf(s)} · ${fmtHours(s.hours)}`;
+        typeCounts[key] = (typeCounts[key]||0) + 1;
+      });
+      const topType = Object.entries(typeCounts).sort((a,b)=> b[1]-a[1])[0];
+      commonShiftEl.textContent = `${topType[0]} (${topType[1]})`;
+    }
+
+    const pendingCount = shifts.filter(s => !isShiftDone(s)).length;
+    const pendingNote = document.getElementById("pendingNote");
+    if(pendingCount > 0){
+      pendingNote.style.display = "";
+      pendingNote.textContent = `⏳ ${pendingCount} upcoming shift${pendingCount===1?"":"s"} not counted yet — added to totals once they're done`;
+    } else {
+      pendingNote.style.display = "none";
+    }
+
+    // next shift (skip shifts that have already ended, even if today)
+    const upcoming = shifts.filter(s => !isShiftDone(s)).sort((a,b)=> a.date.localeCompare(b.date));
+    const heroDays = document.getElementById("heroNextDays");
+    const heroLabel = document.getElementById("heroNextLabel");
+    if(upcoming.length){
+      const next = upcoming[0];
+      const nd = parseDateFlexible(next.date);
+      const diffDays = Math.round((nd - new Date(now.getFullYear(),now.getMonth(),now.getDate())) / 86400000);
+      if(diffDays === 0){
+        heroDays.textContent = next.establishment || "Shift today";
+        heroLabel.textContent = `Today · ${fmtTime12(next.start)}`;
+        heroDays.classList.add("is-est");
+      } else {
+        heroDays.textContent = diffDays;
+        heroLabel.textContent = `days to ${next.establishment} (${fmtTime12(next.start)})`;
+        heroDays.classList.remove("is-est");
+      }
+    } else {
+      heroDays.textContent = "—";
+      heroLabel.textContent = shifts.length ? "no upcoming shifts logged" : "log your first shift!";
+      heroDays.classList.remove("is-est");
+    }
+  }
+
+  // ===== LOG LIST =====
+  const logList = document.getElementById("logList");
+  const filterBar = document.getElementById("filterBar");
+
+  function renderFilters(){
+    const ests = Array.from(new Set(shifts.map(s=>s.establishment).filter(Boolean))).sort();
+    let html = `<div class="chip ${activeFilter==='all'?'active':''}" data-f="all">All</div>`;
+    for(const e of ests){
+      html += `<div class="chip ${activeFilter===e?'active':''}" data-f="${escapeHtml(e)}">${escapeHtml(e)}</div>`;
+    }
+    filterBar.innerHTML = html;
+    filterBar.querySelectorAll(".chip").forEach(c=>{
+      c.addEventListener("click", ()=>{ activeFilter = c.getAttribute("data-f"); renderAll(); });
+    });
+  }
+
+  function renderLog(){
+    const list = shifts
+      .filter(s => activeFilter === "all" || s.establishment === activeFilter)
+      .slice().sort((a,b)=> b.date.localeCompare(a.date) || b.start.localeCompare(a.start));
+
+    if(list.length === 0){
+      logList.innerHTML = `<div class="empty"><span class="em"><svg class="icon"><use href="#ic-badge"/></svg></span>No shifts stamped yet.<br>Log one, or paste your sheet above.</div>`;
+      return;
+    }
+    const monthNames = ["JAN","FEB","MAR","APR","MAY","JUN","JUL","AUG","SEP","OCT","NOV","DEC"];
+    let html = "";
+    for(const s of list){
+      const [y,m,d] = s.date.split("-").map(Number);
+      const done = isShiftDone(s);
+      const estLabel = s.establishment
+        ? escapeHtml(s.establishment)
+        : `<span class="est-missing">No establishment set</span>`;
+      html += `<div class="log-item ${done ? "" : "pending"}">
+        <div class="log-date"><div class="d">${d}</div><div class="m">${monthNames[m-1]}</div></div>
+        <div class="log-mid">
+          <div class="est">${estLabel}<button class="est-edit-btn" data-est-edit="${s.id}" title="Set establishment"><svg class="icon"><use href="#ic-tag"/></svg></button></div>
+          <div class="time">${fmtTime12(s.start)}–${fmtTime12(s.end)} · ${fmtHours(s.hours)}${done ? "" : `<span class="pending-tag">Upcoming</span>`}</div>
+          ${s.notes ? `<div class="shift-note"><svg class="icon icon-inline"><use href="#ic-note"/></svg>${escapeHtml(s.notes)}</div>` : ""}
+        </div>
+        <div class="log-pay">${fmtMoney(s.pay)}<small>${fmtMoney(s.rate)}/hr${done ? "" : " · pending"}</small></div>
+        <button class="del-btn" data-id="${s.id}" title="Remove"><svg class="icon"><use href="#ic-x"/></svg></button>
+      </div>`;
+    }
+    logList.innerHTML = html;
+    logList.querySelectorAll(".del-btn").forEach(b=>{
+      b.addEventListener("click", ()=>{
+        const id = b.getAttribute("data-id");
+        confirmAction("Remove this shift from your log? This can't be undone.", ()=>{
+          deleteShiftWithUndo(id, "Shift removed");
+        });
+      });
+    });
+    logList.querySelectorAll("[data-est-edit]").forEach(b=>{
+      b.addEventListener("click", ()=> openEstEdit(b.getAttribute("data-est-edit")));
+    });
+  }
+
+  function renderEstList(){
+    const fromShifts = shifts.map(s=>s.establishment).filter(Boolean);
+    const fromSaved = settings.establishments.map(e=>e.name);
+    const ests = Array.from(new Set([...fromSaved, ...fromShifts]));
+    document.getElementById("estList").innerHTML = ests.map(e=>`<option value="${escapeHtml(e)}">`).join("");
+  }
+
+  function renderProfile(){
+    const name = settings.userName || "";
+    const emailText = window.__currentUserEmail || (()=>{
+      const emailEl = document.getElementById("accountEmailDesc");
+      return emailEl ? emailEl.textContent.replace("Signed in as ", "").replace(".", "").trim() : "";
+    })();
+
+    // Avatar initials
+    const avatarEl = document.getElementById("profileAvatar");
+    if(avatarEl){
+      const initials = name ? name.trim().split(/\s+/).map(w=>w[0].toUpperCase()).slice(0,2).join("") : (emailText ? emailText[0].toUpperCase() : "?");
+      avatarEl.textContent = initials;
+    }
+    // Name + email in hero card
+    const pName = document.getElementById("profileName");
+    if(pName) pName.textContent = name || "No display name set";
+    const pEmail = document.getElementById("profileEmail");
+    if(pEmail) pEmail.textContent = emailText || "—";
+
+    // Account detail rows
+    const pEmailDetail = document.getElementById("profileEmailDetail");
+    if(pEmailDetail) pEmailDetail.textContent = emailText || "—";
+    const pNameDetail = document.getElementById("profileNameDetail");
+    if(pNameDetail) pNameDetail.textContent = name || "Not set";
+
+    // Stats
+    const doneShifts = shifts.filter(s => isShiftDone(s));
+    const totalHours = doneShifts.reduce((a,s)=>a+s.hours,0);
+    const totalEarned = doneShifts.reduce((a,s)=>a+s.pay,0);
+    const uniqueEsts = new Set(shifts.map(s=>s.establishment).filter(Boolean)).size;
+    const statShiftsEl = document.getElementById("profileStatShifts");
+    if(statShiftsEl) statShiftsEl.textContent = doneShifts.length;
+    const statHoursEl = document.getElementById("profileStatHours");
+    if(statHoursEl) statHoursEl.textContent = fmtHours(totalHours);
+    const statEarnedEl = document.getElementById("profileStatEarned");
+    if(statEarnedEl) statEarnedEl.textContent = fmtMoney(totalEarned);
+    const statEstsEl = document.getElementById("profileStatEsts");
+    if(statEstsEl) statEstsEl.textContent = uniqueEsts;
+
+    // Most active month
+    const monthCounts = {};
+    for(const s of doneShifts){
+      const ym = s.date.slice(0,7);
+      monthCounts[ym] = (monthCounts[ym]||0) + 1;
+    }
+    const bestYM = Object.keys(monthCounts).sort((a,b)=>monthCounts[b]-monthCounts[a])[0];
+    const bestMonthEl = document.getElementById("profileBestMonth");
+    const bestMonthSubEl = document.getElementById("profileBestMonthSub");
+    if(bestMonthEl && bestMonthSubEl){
+      if(bestYM){
+        const [y,m] = bestYM.split("-").map(Number);
+        const monthName = new Date(y,m-1,1).toLocaleDateString("default",{month:"long",year:"numeric"});
+        bestMonthEl.textContent = monthName;
+        bestMonthSubEl.textContent = `${monthCounts[bestYM]} shift${monthCounts[bestYM]===1?"":"s"} worked`;
+      } else {
+        bestMonthEl.textContent = "—";
+        bestMonthSubEl.textContent = "No shifts logged yet";
+      }
+    }
+
+    renderSalaryHistory(doneShifts);
+  }
+
+  // Pay period runs the 20th of one month through the 20th of the next
+  // (both boundary 20ths belong to this period).
+  function payPeriodStartForDate(dateStr){
+    const [y,m,d] = dateStr.split("-").map(Number);
+    return d > 20 ? new Date(y, m-1, 20) : new Date(y, m-2, 20);
+  }
+  function renderSalaryHistory(doneShifts){
+    const listEl = document.getElementById("salaryHistoryList");
+    if(!listEl) return;
+
+    const periodMap = {};
+    doneShifts.forEach(s=>{
+      const start = payPeriodStartForDate(s.date);
+      const key = dateKey(start);
+      if(!periodMap[key]) periodMap[key] = { start, total:0, hours:0, count:0, expenses:0 };
+      periodMap[key].total += s.pay;
+      periodMap[key].hours += s.hours;
+      periodMap[key].count += 1;
+      periodMap[key].expenses += (s.expense || 0);
+    });
+
+    // Always include the current (in-progress) period, even with no shifts yet.
+    const { start: curStart } = currentPayPeriodRange(new Date());
+    const curKey = dateKey(curStart);
+    if(!periodMap[curKey]) periodMap[curKey] = { start: curStart, total:0, hours:0, count:0, expenses:0 };
+
+    const periods = Object.values(periodMap).sort((a,b)=> b.start - a.start).slice(0, 12);
+
+    if(periods.length === 0){
+      listEl.innerHTML = `<p style="font-size:13px; color:var(--mut-55); font-weight:600;">No pay periods yet.</p>`;
+      return;
+    }
+
+    listEl.innerHTML = periods.map(p=>{
+      const end = new Date(p.start.getFullYear(), p.start.getMonth()+1, p.start.getDate());
+      const startLbl = p.start.toLocaleDateString("default", { month:"short", day:"numeric" });
+      const endLbl = end.toLocaleDateString("default", { month:"short", day:"numeric", year:"numeric" });
+      const isCurrent = dateKey(p.start) === curKey;
+      return `
+        <div style="display:flex; justify-content:space-between; align-items:center; padding:12px 14px; background:var(--paper-2); border-radius:12px; border:1.5px solid ${isCurrent ? 'var(--sun)' : 'var(--line)'};">
+          <div>
+            <div style="font-size:13.5px; font-weight:800; color:var(--ink); display:flex; align-items:center; gap:6px;">
+              ${startLbl} – ${endLbl}
+              ${isCurrent ? `<span style="font-size:10px; font-weight:800; color:var(--ink); background:var(--sun); padding:2px 7px; border-radius:999px; text-transform:uppercase; letter-spacing:.03em;">Current</span>` : ""}
+            </div>
+            <div style="font-size:12px; color:var(--mut-55); font-weight:600; margin-top:2px;">${p.count} shift${p.count===1?"":"s"} · ${fmtHours(p.hours)}</div>
+            <div style="font-size:11.5px; color:var(--coral); font-weight:700; margin-top:2px;">${p.expenses > 0 ? `Expenses: ${fmtMoney(p.expenses)}` : "No expenses"}</div>
+          </div>
+          <div style="text-align:right;">
+            <div style="font-size:15px; font-weight:800; color:var(--ink);">${fmtMoney(p.total)}</div>
+            ${p.expenses > 0 ? `<div style="font-size:11px; font-weight:700; color:var(--mut-50);">Net ${fmtMoney(p.total - p.expenses)}</div>` : ""}
+          </div>
+        </div>
+      `;
+    }).join("");
+  }
+
+  function renderAll(){
+    renderStats();
+    renderCalendar();
+    renderFilters();
+    renderLog();
+    renderEstList();
+    renderEstablishmentUI();
+    renderShiftTypePick();
+    renderGreeting();
+    renderProfile();
+  }
+
+  // ===== SETTINGS TAB =====
+  function renderGreeting(){
+    const el = document.getElementById("heroGreeting");
+    el.textContent = settings.userName
+      ? `Welcome back, ${settings.userName}!`
+      : `Welcome back to work!`;
+  }
+
+  // Hidden input kept for compatibility (no longer shown in settings)
+  const userNameInput = document.getElementById("userNameInput");
+  if(userNameInput) userNameInput.value = settings.userName || "";
+  // saveNameBtn no longer exists in UI but guard anyway
+  const _oldSaveBtn = document.getElementById("saveNameBtn");
+  if(_oldSaveBtn) _oldSaveBtn.addEventListener("click", ()=>{
+    settings.userName = (userNameInput ? userNameInput.value.trim() : "");
+    save(); renderGreeting();
+    toast(settings.userName ? `Saved — hi ${settings.userName}!` : "Name cleared");
+  });
+
+  // ===== PROFILE NAME EDIT =====
+  const profileNameInput = document.getElementById("profileNameInput");
+  const profileEditNameBtn = document.getElementById("profileEditNameBtn");
+  const profileSaveNameBtn = document.getElementById("profileSaveNameBtn");
+  const profileCancelNameBtn = document.getElementById("profileCancelNameBtn");
+  const profileNameEditRow = document.getElementById("profileNameEditRow");
+  const profileNameDisplay = document.getElementById("profileNameDisplay");
+
+  function openProfileNameEdit(){
+    if(profileNameInput) profileNameInput.value = settings.userName || "";
+    if(profileNameEditRow){ profileNameEditRow.style.display = "flex"; }
+    if(profileNameDisplay) profileNameDisplay.style.opacity = "0.4";
+    if(profileNameInput) profileNameInput.focus();
+  }
+  function closeProfileNameEdit(){
+    if(profileNameEditRow){ profileNameEditRow.style.display = "none"; }
+    if(profileNameDisplay) profileNameDisplay.style.opacity = "";
+  }
+  function saveProfileName(){
+    const newName = profileNameInput ? profileNameInput.value.trim() : "";
+    settings.userName = newName;
+    if(userNameInput) userNameInput.value = newName;
+    save();
+    renderGreeting();
+    renderProfile();
+    closeProfileNameEdit();
+    toast(newName ? `Saved — hi ${newName}!` : "Name cleared");
+    window.__userDisplayName = newName;
+    // Also persist to Firestore so the coordinator's team tab (which reads
+    // users/{uid}.name live) picks up the change immediately.
+    try{
+      const fdb = window.__coordDb;
+      const fs = window.__coordFirestore;
+      const uid = window.__currentUid;
+      if(fdb && fs && uid){
+        fs.setDoc(fs.doc(fdb, "users", uid), { name: newName }, { merge: true }).catch(e=>{
+          console.warn("Failed to sync name to Firestore:", e);
+        });
+      }
+    } catch(e){ console.warn("Failed to sync name to Firestore:", e); }
+  }
+  if(profileEditNameBtn) profileEditNameBtn.addEventListener("click", openProfileNameEdit);
+  if(profileSaveNameBtn) profileSaveNameBtn.addEventListener("click", saveProfileName);
+  if(profileCancelNameBtn) profileCancelNameBtn.addEventListener("click", closeProfileNameEdit);
+  if(profileNameInput) profileNameInput.addEventListener("keydown", e => { if(e.key === "Enter") saveProfileName(); if(e.key === "Escape") closeProfileNameEdit(); });
+
+  document.getElementById("removeMonthBtn").addEventListener("click", ()=>{
+    let val = document.getElementById("removeMonthInput").value;
+    if(!val){ toast("Pick a month first"); return; }
+    // Normalize: ensure format is YYYY-MM (some browsers may return YYYY-MM or similar)
+    val = val.trim();
+    if(!/^\d{4}-\d{2}$/.test(val)){ toast("Invalid month — please pick a month from the calendar"); return; }
+    const [yy, mm] = val.split("-").map(Number);
+    if(mm < 1 || mm > 12){ toast("Invalid month selected"); return; }
+    // Match any shift whose date starts with the YYYY-MM prefix
+    const prefix = val; // e.g. "2025-08"
+    const count = shifts.filter(s => typeof s.date === "string" && s.date.slice(0,7) === prefix).length;
+    if(count === 0){ toast("No shifts found in that month"); return; }
+    const monthName = new Date(yy, mm-1, 1).toLocaleDateString('default', { month:'long', year:'numeric' });
+    confirmAction(`Remove all ${count} shift${count===1?"":"s"} logged in ${monthName}? This can't be undone.`, ()=>{
+      shifts = shifts.filter(s => !(typeof s.date === "string" && s.date.slice(0,7) === prefix));
+      save();
+      renderAll();
+      toast(`${count} shift${count===1?"":"s"} removed`);
+    });
+  });
+
+  document.getElementById("removeAllShiftsBtn").addEventListener("click", ()=>{
+    if(shifts.length === 0){ toast("You have no shifts logged"); return; }
+    confirmAction(`Remove all ${shifts.length} shifts from your passport? This can't be undone.`, ()=>{
+      shifts = [];
+      save();
+      renderAll();
+      toast("All shifts removed");
+    });
+  });
+
+  document.getElementById("removeAllEstsBtn").addEventListener("click", ()=>{
+    if(settings.establishments.length === 0){ toast("You have no saved establishments"); return; }
+    confirmAction(`Remove all ${settings.establishments.length} saved establishments? Shifts already logged keep their establishment name — this only clears your saved tap-to-pick list.`, ()=>{
+      settings.establishments = [];
+      save();
+      renderAll();
+      toast("All establishments removed");
+    });
+  });
+
+  const logoutBtn = document.getElementById("logoutBtn");
+  if(logoutBtn){
+    logoutBtn.addEventListener("click", ()=>{
+      confirmAction("Log out of KZC Shifts?", ()=>{
+        if(window.__fb) window.__fb.logOut().catch(err=>console.error("Logout failed:", err));
+      });
+    });
+  }
+  const profileLogoutBtn = document.getElementById("profileLogoutBtn");
+  if(profileLogoutBtn){
+    profileLogoutBtn.addEventListener("click", ()=>{
+      confirmAction("Log out of KZC Shifts?", ()=>{
+        if(window.__fb) window.__fb.logOut().catch(err=>console.error("Logout failed:", err));
+      });
+    });
+  }
+
+  renderAll();
+  const footYearEl = document.getElementById("footYear");
+  if(footYearEl) footYearEl.textContent = new Date().getFullYear();
+
+  // ===== STAFF-SIDE: Day-off request button wiring =====
+  const openDayOffBtn = document.getElementById("openDayOffBtn");
+  if(openDayOffBtn){
+    openDayOffBtn.addEventListener("click", ()=>{
+      const bd = document.getElementById("coordDayOffBackdrop");
+      const sh = document.getElementById("coordDayOffSheet");
+      if(bd && sh){
+        bd.classList.add("show");
+        sh.classList.add("show");
+        syncBodyScrollLock();
+        // set today as default
+        const ddi = document.getElementById("coordDayOffDate");
+        if(ddi && !ddi.value) ddi.value = dateKey(new Date());
+        // Load existing requests via staffCoordModule
+        if(typeof window.__staffLoadMyRequests === "function") window.__staffLoadMyRequests();
+      }
+    });
+  }
+  const coordDayOffCloseBtn = document.getElementById("coordDayOffCloseBtn");
+  if(coordDayOffCloseBtn){
+    coordDayOffCloseBtn.addEventListener("click", ()=>{
+      document.getElementById("coordDayOffBackdrop").classList.remove("show");
+      document.getElementById("coordDayOffSheet").classList.remove("show");
+      syncBodyScrollLock();
+    });
+  }
+  const coordDayOffBackdrop = document.getElementById("coordDayOffBackdrop");
+  if(coordDayOffBackdrop){
+    coordDayOffBackdrop.addEventListener("click", ()=>{
+      coordDayOffBackdrop.classList.remove("show");
+      document.getElementById("coordDayOffSheet").classList.remove("show");
+      syncBodyScrollLock();
+    });
+  }
+  const coordAssignedCloseBtn = document.getElementById("coordAssignedCloseBtn");
+  if(coordAssignedCloseBtn){
+    coordAssignedCloseBtn.addEventListener("click", ()=>{
+      document.getElementById("coordAssignedBackdrop").classList.remove("show");
+      document.getElementById("coordAssignedSheet").classList.remove("show");
+      syncBodyScrollLock();
+    });
+  }
+  const coordAssignedBackdrop = document.getElementById("coordAssignedBackdrop");
+  if(coordAssignedBackdrop){
+    coordAssignedBackdrop.addEventListener("click", ()=>{
+      coordAssignedBackdrop.classList.remove("show");
+      document.getElementById("coordAssignedSheet").classList.remove("show");
+      syncBodyScrollLock();
+    });
+  }
+})();
+</script>
+
+<!-- ===== STAFF COORDINATOR EXTENSION (module, runs after auth) ===== -->
+<script type="module">
+// This module activates for staff users on a team — it adds assigned shift display
+// and day-off request functionality to the existing staff UI.
+// It does NOT run for admin users (they get adminRoot instead).
+
+function weekKey(date){
+  const d = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+  // Get Monday of this week
+  const day = d.getDay(); // 0=Sun
+  const diff = (day === 0) ? -6 : 1 - day;
+  d.setDate(d.getDate() + diff);
+  const y = d.getFullYear();
+  // ISO week number
+  const startOfYear = new Date(y, 0, 1);
+  const weekNum = Math.ceil(((d - startOfYear) / 86400000 + startOfYear.getDay() + 1) / 7);
+  return `${y}-W${String(weekNum).padStart(2,"0")}`;
+}
+
+import { getFirestore, doc, onSnapshot, collection, query, where, addDoc, getDocs, orderBy } from "https://www.gstatic.com/firebasejs/12.17.1/firebase-firestore.js";
+import { getApp } from "https://www.gstatic.com/firebasejs/12.17.1/firebase-app.js";
+
+const db = getFirestore(getApp());
+
+let _staffUid = null;
+let _staffTeamId = null;
+let _unsubSchedule = null;
+let _unsubRequests = null;
+let _assignedShifts = {}; // date -> {establishment, slot}
+
+function escHtml(s){ return String(s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
+
+function dateKey2(d){
+  return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");
+}
+
+// Called when an assigned shift marker is tapped on the calendar
+window.__openAssignedShift = function(dateStr){
+  const a = _assignedShifts[dateStr];
+  if(!a) return;
+  const tl = document.getElementById("coordAssignedTitle");
+  const bd = document.getElementById("coordAssignedBody");
+  const bkd = document.getElementById("coordAssignedBackdrop");
+  const sh = document.getElementById("coordAssignedSheet");
+  if(!tl || !bd || !bkd || !sh) return;
+  tl.textContent = "Assigned shift — " + dateStr;
+  bd.innerHTML = `
+    <div style="display:inline-flex; align-items:center; gap:6px; background:var(--sun); color:var(--ink); font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:.03em; border-radius:6px; padding:4px 8px; margin-bottom:10px;">✦ Made by coordinator</div>
+    <div style="margin-bottom:8px;"><strong>Slot:</strong> ${escHtml(a.slot === "OFF" ? "Day off" : (a.slot || "—"))}</div>
+    ${a.slot !== "OFF" ? `<div style="margin-bottom:8px;"><strong>Establishment:</strong> ${escHtml(a.establishment || "—")}</div>` : ""}
+    <div style="color:var(--mut-50); font-size:12px; margin-top:12px;">This shift was scheduled by your coordinator and syncs automatically. It can't be edited or deleted from your side.</div>
+  `;
+  bkd.classList.add("show");
+  sh.classList.add("show");
+};
+
+// Watches EVERY week doc under schedules/{teamId}/weeks so assigned shifts
+// stay in sync no matter which month/week the staff member is browsing —
+// not just the current calendar week. Each week doc gets its own listener
+// (merged into one shared _assignedShifts map) so live coordinator edits to
+// any week, past or future, reflect immediately.
+let _weekUnsubs = {}; // weekId -> unsub fn
+let _weekData2 = {}; // weekId -> days map, merged into _assignedShifts
+
+function rebuildAssignedFromWeeks(uid){
+  const merged = {};
+  for(const days of Object.values(_weekData2)){
+    for(const [date, staffMap] of Object.entries(days)){
+      if(staffMap[uid]) merged[date] = staffMap[uid];
+    }
+  }
+  _assignedShifts = merged;
+  if(typeof renderCalendar === "function") renderCalendar();
+  else if(typeof window.__renderCalendar === "function") window.__renderCalendar();
+}
+
+function watchAssignedShifts(uid, teamId){
+  // Tear down any previous listeners
+  Object.values(_weekUnsubs).forEach(fn => fn && fn());
+  _weekUnsubs = {};
+  _weekData2 = {};
+  if(_unsubSchedule){ _unsubSchedule(); _unsubSchedule = null; }
+  if(!teamId) return;
+
+  const weeksColRef = collection(db, "schedules", teamId, "weeks");
+  // Listen to the whole weeks collection so newly-created week docs
+  // (coordinator scheduling a new week for the first time) are picked up
+  // automatically, and each individual week doc stays live-synced.
+  _unsubSchedule = onSnapshot(weeksColRef, (colSnap)=>{
+    const seenIds = new Set();
+    colSnap.forEach(weekDoc => {
+      const weekId = weekDoc.id;
+      seenIds.add(weekId);
+      const days = (weekDoc.data() && weekDoc.data().days) || {};
+      _weekData2[weekId] = days;
+    });
+    // Drop any week ids that no longer exist
+    for(const wk of Object.keys(_weekData2)){
+      if(!seenIds.has(wk)) delete _weekData2[wk];
+    }
+    rebuildAssignedFromWeeks(uid);
+  }, err => console.warn("Staff schedule watch failed:", err));
+}
+
+// Expose assigned shifts for calendar rendering
+window.__getAssignedShifts = function(){ return _assignedShifts; };
+
+// Day-off request submit
+const dayOffSubmitBtn = document.getElementById("coordDayOffSubmitBtn");
+if(dayOffSubmitBtn){
+  dayOffSubmitBtn.addEventListener("click", async ()=>{
+    if(!_staffUid || !_staffTeamId){ alert("Not on a team yet."); return; }
+    const dateEl = document.getElementById("coordDayOffDate");
+    const noteEl = document.getElementById("coordDayOffNote");
+    const errEl = document.getElementById("coordDayOffError");
+    const date = dateEl ? dateEl.value : "";
+    const note = noteEl ? noteEl.value.trim() : "";
+    if(!date){ if(errEl){ errEl.textContent="Pick a date."; errEl.style.display=""; } return; }
+    if(errEl) errEl.style.display = "none";
+    dayOffSubmitBtn.disabled = true;
+    dayOffSubmitBtn.textContent = "Submitting…";
+    try{
+      // Get staff name
+      let staffName = window.__userDisplayName || window.__currentUserEmail || "Staff";
+      await addDoc(collection(db, "dayOffRequests"), {
+        teamId: _staffTeamId,
+        staffUid: _staffUid,
+        staffName: staffName,
+        date: date,
+        note: note,
+        status: "pending",
+        createdAt: Date.now()
+      });
+      if(dateEl) dateEl.value = "";
+      if(noteEl) noteEl.value = "";
+      // toast
+      const t = document.getElementById("toast");
+      if(t){ t.textContent="Day-off request submitted!"; t.classList.add("show"); setTimeout(()=>t.classList.remove("show"),2200); }
+    } catch(e){
+      if(errEl){ errEl.textContent="Failed to submit: " + e.message; errEl.style.display=""; }
+    }
+    dayOffSubmitBtn.disabled = false;
+    dayOffSubmitBtn.textContent = "Submit request";
+  });
+}
+
+window.__staffLoadMyRequests = function(){
+  if(_unsubRequests){ _unsubRequests(); _unsubRequests = null; }
+  if(!_staffUid) return;
+  const listEl = document.getElementById("coordMyRequestsList");
+  if(!listEl) return;
+  listEl.innerHTML = '<p style="font-size:13px;color:var(--mut-50);">Loading…</p>';
+  const q = query(collection(db, "dayOffRequests"), where("staffUid","==",_staffUid));
+  _unsubRequests = onSnapshot(q, (snap)=>{
+    const reqs = [];
+    snap.forEach(d => reqs.push({id:d.id,...d.data()}));
+    reqs.sort((a,b)=>(b.createdAt||0)-(a.createdAt||0));
+    if(!reqs.length){
+      listEl.innerHTML = '<p style="font-size:13px;color:var(--mut-50);">No requests yet.</p>';
+      return;
+    }
+    const statLabels = {pending:'<svg class="icon icon-inline"><use href="#ic-clock"/></svg>Pending', approved:'<svg class="icon icon-inline"><use href="#ic-check"/></svg>Approved', rejected:'<svg class="icon icon-inline"><use href="#ic-x"/></svg>Rejected'};
+    listEl.innerHTML = reqs.map(r=>`
+      <div class="my-req-item">
+        <div>
+          <div class="mri-date">${escHtml(r.date)}</div>
+          ${r.note ? `<div class="mri-note">${escHtml(r.note)}</div>` : ""}
+        </div>
+        <span class="crq-status ${r.status||"pending"}">${statLabels[r.status]||r.status}</span>
+      </div>
+    `).join("");
+  }, err => { if(listEl) listEl.innerHTML = '<p style="color:var(--coral);font-size:13px;">Error loading requests.</p>'; });
+};
+
+// Called by auth module after user doc is read and role is "staff"
+window.__staffCoordInit = async function(uid, userDoc){
+  _staffUid = uid;
+  _staffTeamId = userDoc.teamId || null;
+
+  // Show day-off request panel only if staff is on a team
+  const panel = document.getElementById("dayOffRequestPanel");
+  if(panel) panel.style.display = _staffTeamId ? "" : "none";
+
+  if(_staffTeamId){
+    watchAssignedShifts(uid, _staffTeamId);
+    window.__staffLoadMyRequests();
+  }
+};
+
+// Cleanup on logout
+window.__staffCoordLogout = function(){
+  _staffUid = null; _staffTeamId = null; _assignedShifts = {};
+  _weekData2 = {};
+  Object.values(_weekUnsubs).forEach(fn => fn && fn());
+  _weekUnsubs = {};
+  if(_unsubSchedule){ _unsubSchedule(); _unsubSchedule = null; }
+  if(_unsubRequests){ _unsubRequests(); _unsubRequests = null; }
+};
+</script>
+
+</div><!-- /#appRoot -->
+
+
+<!-- ===== ADMIN DASHBOARD ===== -->
+<div id="adminRoot" style="display:none;" class="admin-root">
+  <aside class="sidebar coord-sidebar">
+    <div class="sb-title">KZC<br>Admin</div>
+    <nav class="sb-nav">
+      <button class="sb-link active" id="adminThemeSpacer" style="visibility:hidden;height:0;padding:0;margin:0;"></button>
+    </nav>
+    <div style="flex:1;"></div>
+    <button class="btn btn-ghost btn-block" id="adminLogoutBtn" style="border-color:var(--coral); color:var(--coral);">Log out</button>
+    <div class="sb-foot">KidZania Cairo · Admin</div>
+  </aside>
+
+  <div class="admin-wrap">
+    <div class="tab-head">
+      <h1>All users</h1>
+      <p class="sub-dark">Every account on KZC Shifts and their logged schedule.</p>
+    </div>
+
+    <div class="panel">
+      <input type="text" id="adminSearchInput" class="auth-input" placeholder="Search by name or email…" style="margin-bottom:14px;">
+      <div id="adminUsersList"><div class="coord-skeleton" style="height:60px;border-radius:12px;margin-bottom:8px;"></div></div>
+    </div>
+  </div>
+</div><!-- /#adminRoot -->
+
+<!-- Admin: user schedule detail sheet -->
+<div class="sheet-backdrop" id="adminUserBackdrop"></div>
+<div class="sheet" id="adminUserSheet">
+  <div class="handle"></div>
+  <h3 id="adminUserTitle">Schedule</h3>
+  <div class="cal-head">
+    <div class="month" id="adminCalMonthLabel">—</div>
+    <div class="cal-nav">
+      <button class="icon-btn" id="adminCalPrevBtn">‹</button>
+      <button class="icon-btn" id="adminCalTodayBtn" style="width:auto;padding:0 10px;font-size:12px;">Today</button>
+      <button class="icon-btn" id="adminCalNextBtn">›</button>
+    </div>
+  </div>
+  <div class="dow" id="adminCalDow"><div>S</div><div>M</div><div>T</div><div>W</div><div>T</div><div>F</div><div>S</div></div>
+  <div class="cal-grid" id="adminCalGrid"></div>
+  <div id="adminUserBody" style="font-size:13.5px; color:var(--mut-60); line-height:1.7; max-height:30vh; overflow-y:auto; margin-top:12px;"></div>
+  <button class="sheet-close" id="adminUserCloseBtn">Close</button>
+</div>
+
+<!-- ===== ADMIN MODULE (module, runs after auth) ===== -->
+<script type="module">
+import {
+  getFirestore, doc, getDoc, collection, getDocs
+} from "https://www.gstatic.com/firebasejs/12.17.1/firebase-firestore.js";
+import { getApp } from "https://www.gstatic.com/firebasejs/12.17.1/firebase-app.js";
+import { getAuth, signOut } from "https://www.gstatic.com/firebasejs/12.17.1/firebase-auth.js";
+
+const db = getFirestore(getApp());
+const auth = getAuth(getApp());
+
+function escHtml(s){ return String(s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
+
+let _adminAllUsers = [];
+
+async function loadAllUsers(){
+  const listEl = document.getElementById("adminUsersList");
+  if(!listEl) return;
+  listEl.innerHTML = '<div class="coord-skeleton" style="height:60px;border-radius:12px;margin-bottom:8px;"></div>';
+  try{
+    const snap = await getDocs(collection(db, "users"));
+    _adminAllUsers = [];
+    snap.forEach(d => _adminAllUsers.push({ uid: d.id, ...d.data() }));
+    _adminAllUsers.sort((a,b)=> (a.email||"").localeCompare(b.email||""));
+    renderUsersList(_adminAllUsers);
+  } catch(e){
+    listEl.innerHTML = '<p style="color:var(--coral);font-size:13px;">Error loading users: ' + escHtml(e.message) + '</p>';
+  }
+}
+
+function renderUsersList(users){
+  const listEl = document.getElementById("adminUsersList");
+  if(!listEl) return;
+  if(!users.length){
+    listEl.innerHTML = '<p style="font-size:13px;color:var(--mut-50);">No users found.</p>';
+    return;
+  }
+  listEl.innerHTML = users.map(u => `
+    <div class="coord-staff-item" data-admin-uid="${escHtml(u.uid)}" style="cursor:pointer;">
+      <div class="csi-info">
+        <div class="csi-name">${escHtml(u.name || (u.email ? u.email.split("@")[0] : "Unnamed"))}</div>
+        <div class="csi-email">${escHtml(u.email || "no email")} · ${escHtml(u.role || "staff")}</div>
+      </div>
+      <span class="btn btn-ghost" style="padding:6px 12px; font-size:12px;">View schedule</span>
+    </div>
+  `).join("");
+  listEl.querySelectorAll("[data-admin-uid]").forEach(row => {
+    row.addEventListener("click", () => openUserSchedule(row.getAttribute("data-admin-uid")));
+  });
+}
+
+let _adminSchedShifts = [];
+let _adminCalCursor = new Date();
+
+function _adminDateKey(d){
+  return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");
+}
+function _adminShiftsByDate(){
+  const map = {};
+  for(const s of _adminSchedShifts){
+    if(!s.date) continue;
+    (map[s.date] = map[s.date] || []).push(s);
+  }
+  return map;
+}
+function _adminPeriodOf(s){
+  const h = parseInt((s.start||"0").split(":")[0], 10);
+  return h >= 12 ? "PM" : "AM";
+}
+
+function renderAdminCalendar(){
+  const grid = document.getElementById("adminCalGrid");
+  const label = document.getElementById("adminCalMonthLabel");
+  if(!grid || !label) return;
+  const map = _adminShiftsByDate();
+  const year = _adminCalCursor.getFullYear(), month = _adminCalCursor.getMonth();
+  label.textContent = _adminCalCursor.toLocaleString('default', { month:'long', year:'numeric' });
+  const firstDow = new Date(year, month, 1).getDay();
+  const daysInMonth = new Date(year, month+1, 0).getDate();
+  const todayKey = _adminDateKey(new Date());
+
+  let html = "";
+  for(let i=0;i<firstDow;i++) html += '<div class="day pad"></div>';
+  for(let d=1; d<=daysInMonth; d++){
+    const dt = new Date(year, month, d);
+    const key = _adminDateKey(dt);
+    const dayShifts = map[key];
+    const isToday = key === todayKey;
+    const cls = ["day"];
+    if(isToday) cls.push("today");
+    let estTag = "", stampLabel = "";
+    if(dayShifts && dayShifts.length){
+      cls.push("has-shift");
+      const periods = Array.from(new Set(dayShifts.map(_adminPeriodOf)));
+      if(periods.length > 1){ cls.push("period-both"); stampLabel = "AM + PM"; }
+      else if(periods[0] === "AM"){ cls.push("period-am"); stampLabel = "AM"; }
+      else { cls.push("period-pm"); stampLabel = "PM"; }
+      const ests = Array.from(new Set(dayShifts.map(s=>s.establishment).filter(Boolean)));
+      if(ests.length) estTag = `<span class="est-tag" title="${escHtml(ests.join(', '))}">${escHtml(ests.join(', '))}</span>`;
+    } else {
+      cls.push("off-day");
+    }
+    html += `<div class="${cls.join(' ')}" data-date="${key}">
+      <span class="dnum">${d}</span>
+      ${estTag}
+      ${stampLabel ? `<span class="stamp">${stampLabel}</span>` : ""}
+    </div>`;
+  }
+  grid.innerHTML = html;
+
+  const bodyEl = document.getElementById("adminUserBody");
+  grid.querySelectorAll(".day.has-shift").forEach(el=>{
+    el.addEventListener("click", ()=>{
+      const key = el.getAttribute("data-date");
+      const list = (map[key]||[]).slice().sort((a,b)=>(a.start||"").localeCompare(b.start||""));
+      const [y,m,d] = key.split("-").map(Number);
+      const nice = new Date(y, m-1, d).toLocaleDateString('default', { weekday:'long', day:'numeric', month:'long' });
+      bodyEl.innerHTML = `<div style="font-weight:800;color:var(--ink);margin-bottom:6px;">${escHtml(nice)}</div>` + list.map(s => `
+        <div style="display:flex; justify-content:space-between; align-items:center; padding:8px 0; border-bottom:1px solid var(--line);">
+          <div>
+            <div style="font-weight:700; color:var(--ink);">${escHtml(s.establishment || "No establishment")}</div>
+            <div style="font-size:12px; color:var(--mut-50);">${escHtml(s.start || "")}–${escHtml(s.end || "")}</div>
+          </div>
+          ${s.expense ? `<div style="font-size:12px; font-weight:700; color:var(--coral);">Expense: ${escHtml(String(s.expense))}</div>` : ""}
+        </div>
+      `).join("");
+    });
+  });
+}
+
+async function openUserSchedule(uid){
+  const user = _adminAllUsers.find(u => u.uid === uid);
+  const titleEl = document.getElementById("adminUserTitle");
+  const bodyEl = document.getElementById("adminUserBody");
+  const backdrop = document.getElementById("adminUserBackdrop");
+  const sheet = document.getElementById("adminUserSheet");
+  if(!titleEl || !bodyEl || !backdrop || !sheet) return;
+  titleEl.textContent = "Schedule — " + (user ? (user.name || user.email || uid) : uid);
+  bodyEl.innerHTML = "Loading…";
+  backdrop.classList.add("show");
+  sheet.classList.add("show");
+  try{
+    const shiftSnap = await getDoc(doc(db, "shiftData", uid));
+    _adminSchedShifts = (shiftSnap.exists() && Array.isArray(shiftSnap.data().shifts)) ? shiftSnap.data().shifts : [];
+    _adminCalCursor = new Date();
+    bodyEl.innerHTML = _adminSchedShifts.length ? "" : '<p style="color:var(--mut-50);">No shifts logged yet. Tap a highlighted day to see its shifts.</p>';
+    renderAdminCalendar();
+  } catch(e){
+    bodyEl.innerHTML = '<p style="color:var(--coral);">Error loading schedule: ' + escHtml(e.message) + '</p>';
+  }
+}
+
+const adminCalPrevBtn = document.getElementById("adminCalPrevBtn");
+const adminCalNextBtn = document.getElementById("adminCalNextBtn");
+const adminCalTodayBtn = document.getElementById("adminCalTodayBtn");
+if(adminCalPrevBtn) adminCalPrevBtn.addEventListener("click", ()=>{
+  _adminCalCursor = new Date(_adminCalCursor.getFullYear(), _adminCalCursor.getMonth()-1, 1);
+  renderAdminCalendar();
+});
+if(adminCalNextBtn) adminCalNextBtn.addEventListener("click", ()=>{
+  _adminCalCursor = new Date(_adminCalCursor.getFullYear(), _adminCalCursor.getMonth()+1, 1);
+  renderAdminCalendar();
+});
+if(adminCalTodayBtn) adminCalTodayBtn.addEventListener("click", ()=>{
+  _adminCalCursor = new Date();
+  renderAdminCalendar();
+});
+
+const adminUserCloseBtn = document.getElementById("adminUserCloseBtn");
+const adminUserBackdrop = document.getElementById("adminUserBackdrop");
+function closeAdminUserSheet(){
+  const backdrop = document.getElementById("adminUserBackdrop");
+  const sheet = document.getElementById("adminUserSheet");
+  if(backdrop) backdrop.classList.remove("show");
+  if(sheet) sheet.classList.remove("show");
+}
+if(adminUserCloseBtn) adminUserCloseBtn.addEventListener("click", closeAdminUserSheet);
+if(adminUserBackdrop) adminUserBackdrop.addEventListener("click", closeAdminUserSheet);
+
+const adminSearchInput = document.getElementById("adminSearchInput");
+if(adminSearchInput){
+  adminSearchInput.addEventListener("input", () => {
+    const q = adminSearchInput.value.trim().toLowerCase();
+    if(!q){ renderUsersList(_adminAllUsers); return; }
+    renderUsersList(_adminAllUsers.filter(u =>
+      (u.email||"").toLowerCase().includes(q) || (u.name||"").toLowerCase().includes(q)
+    ));
+  });
+}
+
+const adminLogoutBtn = document.getElementById("adminLogoutBtn");
+if(adminLogoutBtn){
+  adminLogoutBtn.addEventListener("click", () => { signOut(auth); });
+}
+
+// Called by the auth module when a signed-in user has role === "admin"
+window.__adminInit = function(user){
+  loadAllUsers();
+};
+
+window.__adminLogout = function(){
+  _adminAllUsers = [];
+  const listEl = document.getElementById("adminUsersList");
+  if(listEl) listEl.innerHTML = "";
+  if(adminSearchInput) adminSearchInput.value = "";
+  closeAdminUserSheet();
+};
+</script>
+
+</body>
+</html>
